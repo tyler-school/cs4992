@@ -1,0 +1,58 @@
+version: "3"
+services:
+  selfservice:
+    image: ghcr.io/atscaleinc/devops-selfservice:3.1.4
+    container_name: selfservice
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      NEXT_PUBLIC_VERSION: 3.1.4
+      NEXT_PUBLIC_HOSTNAME:
+      NEXT_PUBLIC_PORT:
+      NEXT_PUBLIC_HOST:
+      NEXTAUTH_URL:
+      NEXTAUTH_URL_INTERNAL:
+      NEXTAUTH_SECRET:
+      CRYPTOGRAPHY_SECRET:
+      OVH_OPENSTACK_COMPUTE_URL:
+      OVH_OPENSTACK_AUTH_URL:
+      OVH_OPENSTACK_IMAGE_URL:
+      OVH_OPENSTACK_USERNAME:
+      OVH_OPENSTACK_PASSWORD:
+      GOOGLE_CLIENT_ID:
+      GOOGLE_CLIENT_SECRET:
+      GOOGLE_APPLICATION_CREDENTIALS:
+      ONPREM_OPENSTACK_COMPUTE_URL:
+      ONPREM_OPENSTACK_AUTH_URL:
+      ONPREM_OPENSTACK_IMAGE_URL:
+      ONPREM_OPENSTACK_USERNAME:
+      ONPREM_OPENSTACK_DOMAIN:
+      ONPREM_OPENSTACK_PASSWORD:
+      ONPREM_OPENSTACK_PROJECT_ID:
+      CEPH_URL:
+      CEPH_USERNAME:
+      CEPH_PASSWORD:
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    depends_on:
+      - selfservice
+
+  cron:
+    container_name: cron
+    image: lecovi/curl-cron:latest
+    restart: always
+    environment:
+      CRON_SCHEDULE: "0 */12 * * *"
+      URL: "http://selfservice:3000/api/instance/checkExpiry"
+    depends_on:
+      - selfservice

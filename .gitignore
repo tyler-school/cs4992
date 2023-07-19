@@ -105,11 +105,6 @@ docs/_build/
 # PyBuilder
 target/
 
-# IPython Notebook
-.ipynb_checkpoints
-*.ipynb
-!Notebooks/**/*.ipynb
-
 # pyenv
 .python-version
 

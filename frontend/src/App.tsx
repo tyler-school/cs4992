@@ -1,15 +1,28 @@
 import React from 'react';
 import './App.css';
+import HomePage from './components/HomePage';
+import OtherPage from './components/OtherPage';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Welcome to My Homepage</h1>
-      <div className="SearchBar">
-        <input type="text" placeholder="Enter your search here" />
-        <button>Search</button>
-      </div>
-    </div>
+    <Router>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/other">Other Page</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/other" element={<OtherPage />} />
+      </Routes>
+    </Router>
   );
 }
 

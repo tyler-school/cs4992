@@ -17,7 +17,6 @@ class Summarizer():
         self.OPENAI_ORG_ID = orgkey_file.read().rstrip()
 
     def summarize(self, text, max=15):
-
         wrap = [text]
 
         SKLLMConfig.set_openai_key(self.SECRET_KEY)

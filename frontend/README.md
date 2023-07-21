@@ -1,3 +1,28 @@
+# How to get the front end running (The start of the cool read me)
+
+After you've cloned the repo and made sure you're up to date and everything, it's pretty simple to get the front end up and running!
+
+### Step 1: Navigate (using the cd command) into the frontend directory
+
+### Step 2: Run the command npm install
+    npm install
+
+### Step 3: Run the command npm start
+    npm start
+
+After you run this command, you need to leave this terminal window open and running for the frontend to function.
+
+This should automatically open a web browser and navigate to http://localhost:3000/, where you will see the running version of our front end!
+
+
+
+
+
+
+
+
+# All the auto generated "Create React App" stuff that doesn't matter that much:
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

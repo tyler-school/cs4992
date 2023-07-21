@@ -1,11 +1,21 @@
 // src/components/AboutPage.tsx
 import React from 'react';
+import './SearchPage.css';
 
 const SearchPage: React.FC = () => {
   return (
-    <div>
-      <h1>Search Page</h1>
-      {/* Add content specific to the about page */}
+    <div className="SearchPage">
+      <h1>SearchWizard</h1>
+      <div className="SearchContainer">
+        <div className="SearchBar">
+          <input type="text" placeholder="Enter your search here" />
+          <button>Search</button>
+        </div>
+        <div className="DaysBack">
+          <label>Days back to search:</label>
+          <input type="number" />
+        </div>
+      </div>
     </div>
   );
 };

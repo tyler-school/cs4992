@@ -4,7 +4,7 @@ import React from 'react';
 const OtherPage: React.FC = () => {
   return (
     <div>
-      <h1>About Page</h1>
+      <h1>Other Page</h1>
       {/* Add content specific to the about page */}
     </div>
   );

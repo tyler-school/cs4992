@@ -426,3 +426,6 @@ fabric.properties
 # Built Visual Studio Code Extensions
 *.vsix
 
+# openai keys
+/back_end/summarizing/secret_keys/*
+

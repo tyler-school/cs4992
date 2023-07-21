@@ -9,30 +9,32 @@ import Box from './components/Box';
 function App() {
   return (
     <Router>
-       <div style={{ textAlign: 'center', margin: '20px' }}>
-        <nav>
-          
-          <Box width={500} height={100} backgroundColor="lightpink">
-            
-              <ul>
-              <Link to="/">Home</Link>
+    
+        
+
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/edit" element={<EditPage />} />
+        </Routes>
+
+        {/* Move this Box to the bottom */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto' }}>
+          <Box width={500} height={100} backgroundColor="lightblue">
+             <ul>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/search">Search Page</Link>
+                </li>
+                <li>
+                  <Link to="/edit">Edit Page</Link>
+                </li>
               </ul>
-              <ul>
-              <Link to="/search">Search Page</Link>
-              </ul>
-              <ul>
-              <Link to="/edit">Edit Page</Link>
-              </ul>
-            
           </Box>
-        </nav>
         </div>
-     
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/edit" element={<EditPage />} />
-      </Routes>
+    
     </Router>
   );
 }

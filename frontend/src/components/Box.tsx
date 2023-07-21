@@ -18,9 +18,9 @@ const Box: React.FC<BoxProps> = ({ width, height, backgroundColor, children }) =
     alignItems: 'center',
     border: '2px solid #000',
     boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',
-    position: 'absolute',
-    top: 0,
-    right: 0,
+    
+   
+   
   };
 
   

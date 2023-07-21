@@ -6,7 +6,7 @@ const ArticleList: React.FC = () => {
 
   return (
     <div>
-      <h1>List of Names</h1>
+      <h1>List of Articles... Hypothetically</h1>
       <ul>
         {articles.map((article, index) => (
           <li key={index}>{article}</li>

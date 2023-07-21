@@ -1,4 +1,5 @@
 import requests
+import json
 import pandas as pd
 import time
 import xml.etree.ElementTree as ET
@@ -62,15 +63,18 @@ class BaseNewsParser:
                                         period=period)
         response = requests.get(url)
         news_items = parse_news_items(response)
-        df = pd.DataFrame(news_items)
-        df.to_csv(f'{search_term}_news.csv', encoding='utf-8-sig', index=False)
-        return df
+        print(json.dumps(news_items))
+        # df = pd.DataFrame(news_items)
+        # df.to_csv(f'{search_term}_news.csv', encoding='utf-8-sig', index=False)
+        # return df
 
 
 if __name__ == '__main__':
     start_time = time.time()
-    search_term = input('Enter your search term here: ')
-    data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
-    data = get_news(search_term, data_filter)
+    news = BaseNewsParser()
+    # search_term = input('Enter your search term here: ')
+    # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
+    search_term = 'mercedes vortices'
+    news.get_news(search_term, period=RecentPeriod.TODAY)
     end_time = time.time()
     print(f'Execution time: {end_time - start_time:.2f} seconds')

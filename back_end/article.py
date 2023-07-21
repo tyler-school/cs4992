@@ -1,4 +1,4 @@
-from xml.etree.ElementTree import ElementTree as ET
+from xml.etree.ElementTree import ElementTree, fromstring
 from typing import List
 import datetime as dt
 import pandas as pd
@@ -56,7 +56,7 @@ def parse_news_items(response) -> List[ArticleParser]:
     """
     if response.status_code != 200:
         raise Exception('Failed to fetch news items.')
-    root = ET.fromstring(response.text)
+    root = fromstring(response.text)
     news_items = []
     for item in root.findall('.//channel/item'):
         article = ArticleParser(item)

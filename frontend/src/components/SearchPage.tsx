@@ -1,7 +1,7 @@
 // src/components/AboutPage.tsx
 import React from 'react';
 
-const OtherPage: React.FC = () => {
+const SearchPage: React.FC = () => {
   return (
     <div>
       <h1>Other Page</h1>
@@ -10,4 +10,6 @@ const OtherPage: React.FC = () => {
   );
 };
 
-export default OtherPage;
+export default SearchPage;
+
+//Will want an edit page....

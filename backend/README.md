@@ -10,9 +10,17 @@ Run the command:
 
 ### Step 3: Activate the virtual environment
 
+make sure that you are in the directory containing the .venv folder
+
+For Mac:
 Run the command:
 
     . .venv/bin/activate
+
+For Windows:
+Run the command:
+
+    .venv/Scripts/activate
 
 Now your command line should start with (.venv)
 

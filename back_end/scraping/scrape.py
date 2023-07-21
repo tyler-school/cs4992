@@ -3,8 +3,6 @@ import requests
 import sys
 import summarizing.summarize
 
-
-
 class Scraper():
 
     def scrape(self, link):

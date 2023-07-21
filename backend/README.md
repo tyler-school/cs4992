@@ -53,9 +53,11 @@ Now the error in main.py should be resolved
 ### Step 6: Use uvicorn to start the backend
 
 Back to the terminal, run the command:
+
     uvicorn main:app --reload
 
-That should have started the backend! If you navigate to the URL http://127.0.0.1:8000/ in a browser, you should see the message 
+That should have started the backend! If you navigate to the URL http://127.0.0.1:8000/ in a browser, you should see the message
+ 
     {"Root API call"}
 
 The backend should now be started!

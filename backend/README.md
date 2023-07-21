@@ -5,11 +5,13 @@
 ### Step 2: Create a virtual python enviroment
 
 Run the command:
+
     python3 -m venv .venv
 
 ### Step 3: Activate the virtual environment
 
 Run the command:
+
     . .venv/bin/activate
 
 Now your command line should start with (.venv)
@@ -17,9 +19,11 @@ Now your command line should start with (.venv)
 ### Step 4: Install necessary packages
 
 To install FastAPI, run the command:
+
     pip install fastapi
 
 To install uvicorn, run the command:
+
     pip install "uvicorn[standard]"
 
 ### Step 5: Select your virtual environment for the python interpreter in VS Code

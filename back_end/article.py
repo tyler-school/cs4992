@@ -2,6 +2,10 @@ from xml.etree.ElementTree import ElementTree, fromstring
 from typing import List
 import datetime as dt
 import pandas as pd
+from bs4 import BeautifulSoup
+import requests
+
+from summarizing.summarize import Summarize
 
 class ArticleParser:
     """
@@ -48,15 +52,42 @@ class ArticleParser:
     @property
     def source(self):
         return self.__find('source')
+    
+    @property
+    def body_text(self):
+        html_text = requests.get(self._link)
+        soup = BeautifulSoup(html_text.content.decode('utf-8'))
+        body = soup.find_all('p')
+        lists = soup.find_all('li')
+        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
 
+    # For summarizing given text. Uses openAI. Try to use sparingly because $$$$
+    # Each request costs about $0.0007 depending on the size
+    # and we have $5 to spend before we ask Ian to give us money
+    @property
+    def summary(self, text):
+        summarizer = Summarize()
+        summarizer.summarize("...")
 
-def parse_news_items(response) -> List[ArticleParser]:
+    def to_dict() -> dict:
+        """ Converts this 'Article' into a dict with every derivable field """
+        return {
+            'title': self.title,
+            'link': self.link,
+            'description': self.description,
+            'pub_date': self.pub_date,
+            'source': self.source,
+            'body_text': self.body_text,
+            'summary': self.summary,
+        }
+
+def parse_news_items(not_response) -> List[ArticleParser]:
     """
     Parses the news items from the XML root element.
     """
-    if response.status_code != 200:
+    if not_response.status_code != 200:
         raise Exception('Failed to fetch news items.')
-    root = fromstring(response.text)
+    root = fromstring(not_response.text)
     news_items = []
     for item in root.findall('.//channel/item'):
         article = ArticleParser(item)

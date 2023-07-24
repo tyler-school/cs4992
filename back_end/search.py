@@ -3,13 +3,12 @@ import json
 import pandas as pd
 import time
 import xml.etree.ElementTree as ET
-from back_end.enums import RecentPeriod
-from article import ArticleParser, parse_news_items
+from enums import RecentPeriod
+from back_end.article import ArticleParser, parse_news_items
 
 from datetime import datetime, timedelta
 
-
-class BaseNewsParser:
+class SearchEngine:
 
     def __init__(self, max_results: int = 1000):
         self.max_results = max_results
@@ -50,8 +49,8 @@ class BaseNewsParser:
 
     def get_news(self,
                  search_term: str,
-                 start_date: datetime = None,
-                 end_date: datetime = None,
+                 start_date_object: datetime = None,
+                 end_date_object: datetime = None,
                  period: RecentPeriod = None):
         """
         Searches Google News for the given search term and data filter, and returns
@@ -62,16 +61,15 @@ class BaseNewsParser:
                                         end_date=end_date,
                                         period=period)
         response = requests.get(url)
-        news_items = parse_news_items(response)
-        print(json.dumps(news_items))
-        # df = pd.DataFrame(news_items)
-        # df.to_csv(f'{search_term}_news.csv', encoding='utf-8-sig', index=False)
-        # return df
-
+        news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)
+        # right now we can't even get that many articles, so it's not a problem
+        # streaming by making a generator (iterator) might be future solution look up (def __enter__ too)
+        print(a.to_dict() for a in news_items)
+        return news_items
 
 if __name__ == '__main__':
     start_time = time.time()
-    news = BaseNewsParser()
+    news = SearchEngine()
     # search_term = input('Enter your search term here: ')
     # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
     search_term = 'mercedes vortices'

@@ -69,7 +69,7 @@ class ArticleParser:
         summarizer = Summarize()
         summarizer.summarize("...")
 
-    def to_dict() -> dict:
+    def to_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every derivable field """
         return {
             'title': self.title,

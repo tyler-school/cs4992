@@ -4,7 +4,7 @@ import pandas as pd
 import time
 import xml.etree.ElementTree as ET
 from enums import RecentPeriod
-from back_end.article import ArticleParser, parse_news_items
+from article import ArticleParser, parse_news_items
 
 from datetime import datetime, timedelta
 
@@ -34,6 +34,7 @@ class SearchEngine:
             if start_date is not None or end_date is not None:
                 raise Exception("Cannot specify both a period and a start/end date.")
             start_date, end_date = period.get_date_range()
+
         elif start_date is not None:
             end_date = datetime.today() if end_date is None else end_date
 
@@ -60,6 +61,8 @@ class SearchEngine:
                                         start_date=start_date_object,
                                         end_date=end_date_object,
                                         period=period)
+        
+        print(f"url: {url}")
         response = requests.get(url)
         news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)
         # right now we can't even get that many articles, so it's not a problem
@@ -73,6 +76,6 @@ if __name__ == '__main__':
     # search_term = input('Enter your search term here: ')
     # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
     search_term = 'mercedes vortices'
-    news.get_news(search_term, period=RecentPeriod.TODAY)
+    news.get_news(search_term, period=RecentPeriod.THIS_MONTH)
     end_time = time.time()
     print(f'Execution time: {end_time - start_time:.2f} seconds')

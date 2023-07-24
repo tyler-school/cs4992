@@ -55,15 +55,9 @@ class Scraper():
         
         soup = BeautifulSoup(html, features="lxml")
 
-        # In case there are multiple a tags, join the descriptions of all of them.
-        links = soup.find_all('a')
-        text = []
-
-        for a in links:
-            text.append(a.string)
-
-        return '/n'.join(text)
-
+        link = soup.find('a')
+        if link:
+            return link.string
 
 if __name__ == "__main__":
     

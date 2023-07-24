@@ -5,8 +5,6 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 
-from summarizing.summarize import Summarize
-
 class ArticleParser:
     """
     example:
@@ -60,14 +58,6 @@ class ArticleParser:
         body = soup.find_all('p')
         lists = soup.find_all('li')
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
-
-    # For summarizing given text. Uses openAI. Try to use sparingly because $$$$
-    # Each request costs about $0.0007 depending on the size
-    # and we have $5 to spend before we ask Ian to give us money
-    @property
-    def summary(self, text):
-        summarizer = Summarize()
-        summarizer.summarize("...")
 
     def to_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every derivable field """

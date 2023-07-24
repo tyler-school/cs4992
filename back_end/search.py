@@ -7,6 +7,7 @@ from enums import RecentPeriod
 from article import ArticleParser, parse_news_items
 
 from datetime import datetime, timedelta
+from scraping.scrape import Scraper
 
 class SearchEngine:
 
@@ -67,8 +68,12 @@ class SearchEngine:
         news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)
         # right now we can't even get that many articles, so it's not a problem
         # streaming by making a generator (iterator) might be future solution look up (def __enter__ too)
-        print(a.to_dict() for a in news_items)
-        return news_items
+        
+        # printing all info in dict (json) format for each rss result
+        print([a.to_dict() for a in news_items])
+
+        # For getting text descriptions:
+        print([a.text_description() for a in news_items])
 
 if __name__ == '__main__':
     start_time = time.time()

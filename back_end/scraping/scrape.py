@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 import sys
-import summarizing.summarize
 
 class Scraper():
 
@@ -34,16 +33,49 @@ class Scraper():
 
     #     # ...
 
+    def get_desc_text(self, desc) -> str:
+        """ Converts a description into display-able text.
+        
+        EX: a raw description may look like:
+        <a href="https://news.google.com/rss/articles/CBMiQmh0dHBzOi8vd25iZi5jb20vcHJlc3Mtc3VuLWJ1bGxldGluLXNoaWZ0LWRlbGl2ZXJ5LXBvc3RhbC1zZXJ2aWNlL9IBAA?oc=5" 
+        target="_blank">Will Press & Sun-Bulletin Shift Delivery to the Postal Service?</a>&nbsp;&nbsp;<font color="#6f6f6f">wnbf.com</font>
+
+        This function will return just:
+        Will Press & Sun-Bulletin Shift Delivery to the Postal Service?
+
+        """
+
+        # if html
+        if BeautifulSoup(desc, "html.parser").find():
+            return self._scrape_desc_text(desc)
+        else:
+            return desc
+
+    def _scrape_desc_text(self, html) -> list[str]:
+        
+        soup = BeautifulSoup(html, features="lxml")
+
+        # In case there are multiple a tags, join the descriptions of all of them.
+        links = soup.find_all('a')
+        text = []
+
+        for a in links:
+            text.append(a.string)
+
+        return '/n'.join(text)
+
 
 if __name__ == "__main__":
     
-    link = sys.argv[1]
+    # link = sys.argv[1]
 
-    paragraph_list = Scraper().scrape(link)
-    print(paragraph_list)
+    # paragraph_list = Scraper().scrape(link)
+    # print(paragraph_list)
 
-    sum = summarizing.Summarizer()
+    # sum = summarizing.Summarizer()
 
-    sum.summarize(paragraph_list[0])
+    # sum.summarize(paragraph_list[0])
+
+    Scraper().get_desc_text("whatever")
 
 

@@ -5,6 +5,8 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 
+from scraping.scrape import Scraper
+
 class ArticleParser:
     """
     example:
@@ -18,7 +20,6 @@ class ArticleParser:
 
     def __init__(self, item):
         self.item = item
-        print(item)
         self._title = item.find('title').text
         self._link = item.find('link').text
         self._description = item.find('description').text
@@ -39,9 +40,10 @@ class ArticleParser:
     @property
     def description(self):
         description = self.__find('description')
-        start = description.find('<p>') + 3
-        end = description.find('</p>')
-        return description[start:end]
+        # start = description.find('<p>') + 3
+        # end = description.find('</p>')
+        # return description[start:end]
+        return description
 
     @property
     def pub_date(self):
@@ -67,9 +69,11 @@ class ArticleParser:
             'description': self.description,
             'pub_date': self.pub_date,
             'source': self.source,
-            'body_text': self.body_text,
-            'summary': self.summary,
+            'body_text': self.body_text
         }
+    
+    def text_description(self) -> str:
+        return Scraper().get_desc_text(self.description)
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """

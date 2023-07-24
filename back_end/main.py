@@ -22,6 +22,9 @@ def read_search(term, start_date, end_date):
     start_date_object = datetime.strptime(start_date, '%Y-%m-%d') # 2021-01-28
     end_date_object = datetime.strptime(end_date, '%Y-%m-%d')
     result: List[ArticleParser] = searcher.get_news(term, start_date_object, end_date_object)
+
+    
+
     return [a.to_dict() for a in result]
 
     

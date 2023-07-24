@@ -48,9 +48,3 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
-
-.DaysBack {
-  display: flex;
-  align-items: center;
-  margin-top: 5px; /* Add some spacing between input fields */
-}

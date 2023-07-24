@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // If you choose to use Axios
+import axios from 'axios';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import './SearchPage.css';
 
 const SearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,37 +28,45 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="SearchPage">
-      <h1 className="SearchHeading">Search Page</h1>
+      <Typography variant="h3" className="SearchHeading" style={{ marginTop: '80px', marginBottom: '20px'}}>
+        Search Page
+      </Typography>
       <div className="SearchContainer">
         <div className="SearchBar">
-          <input
-            type="text"
-            placeholder="Enter your search here"
+          <TextField
+            id="outlined-basic"
+            label="Enter your search here"
+            variant="outlined"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button onClick={handleSearch}>Search</button>
+          <Button variant="contained" onClick={handleSearch}>
+            Search
+          </Button>
         </div>
         <div className="DaysBack">
-          <label>Days back to search:</label>
-          <input
-            type="number"
-            value={daysBack}
-            onChange={(e) => setDaysBack(e.target.value)}
+          <TextField
+          id='outlined-basic'
+          label='How many days back to look'
+          variant='outlined'
+          type='number'
           />
         </div>
       </div>
+            
       {/* Display the search results */}
       {searchResults.length > 0 && (
         <div className="SearchResults">
           {searchResults.map((result, index) => (
             <div key={index} className="SearchResultItem">
-              <p>{result}</p>
+              <Typography variant="body1">{result}</Typography>
             </div>
           ))}
         </div>
       )}
+      
     </div>
+    
   );
 };
 

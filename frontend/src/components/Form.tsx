@@ -6,9 +6,10 @@ import './Form.css';
 interface FormProps {
   initialSearch: string;
   initialTime: string;
+  onDeleteForm: () => void;
 }
 
-const Form: React.FC<FormProps> = ({ initialSearch, initialTime }) => {
+const Form: React.FC<FormProps> = ({ initialSearch, initialTime, onDeleteForm }) => {
   const [search, setSearch] = useState(initialSearch);
   const [time, setTime] = useState(initialTime);
   const [submittedData, setSubmittedData] = useState<null | { search: string; time: string }>(
@@ -35,21 +36,41 @@ const Form: React.FC<FormProps> = ({ initialSearch, initialTime }) => {
     setSubmittedData(null);
   };
 
-  //Change where the popup is here
+  const formStyle: React.CSSProperties = {
+    width: '500px',
+    position: 'relative',
+  };
+
+  // Change where the popup is here
   const popupStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '100px',
-    right: '300px',
+    position: 'fixed',
+    top: '0',
+    left: '50%',
+    transform: 'translate(-50%)',
     backgroundColor: '#fff',
     border: '1px solid #ccc',
     padding: '10px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   };
 
-  return (
+  const deleteButtonStyle: React.CSSProperties = {
+    position: 'absolute',
+    bottom: '10px',
+    right: '10px',
+    backgroundColor: 'red',
+    color: '#fff',
+    padding: '8px 12px',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  };
 
-    
-    <div className="form-box" style={{ width: '500px' }}> {/* Set the width of the form-box */}
+  const handleDeleteForm = () => {
+    onDeleteForm();
+  };
+
+  return (
+    <div className="form-box" style={formStyle}>
       <label>
         Search:
         <input type="text" value={search} onChange={handleSearchChange} />
@@ -72,8 +93,11 @@ const Form: React.FC<FormProps> = ({ initialSearch, initialTime }) => {
           <button onClick={closePopup}>Close</button>
         </div>
       )}
+
+      <button style={deleteButtonStyle} onClick={handleDeleteForm}>
+        Delete Form
+      </button>
     </div>
-    
   );
 };
 

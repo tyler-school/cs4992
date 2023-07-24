@@ -4,6 +4,7 @@ import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
+from textblob import TextBlob
 
 from scraping.scrape import Scraper
 
@@ -65,6 +66,16 @@ class ArticleParser:
         body = soup.find_all('p')
         lists = soup.find_all('li')
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
+    
+    @property
+    def sentiment(self):
+        """
+        Finds the sentiment (polarity, subjectivity) where the polarity
+        is [-1.0, 1.0] and the subjectivity is 0.0, 1.0]. Returns a named tuple
+        of the form Sentiment(polarity, subjectivity). 
+        """
+        text_blob_object = TextBlob(self.body_text) 
+        return text_blob_object.sentiment
 
     def to_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every derivable field """

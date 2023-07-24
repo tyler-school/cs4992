@@ -57,8 +57,8 @@ class SearchEngine:
         a DataFrame containing the news items.
         """
         url = self._generate_search_url(search_term=search_term,
-                                        start_date=start_date,
-                                        end_date=end_date,
+                                        start_date=start_date_object,
+                                        end_date=end_date_object,
                                         period=period)
         response = requests.get(url)
         news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)

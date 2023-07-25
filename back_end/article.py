@@ -20,11 +20,6 @@ class ArticleParser:
 
     def __init__(self, item):
         self.item = item
-        self._title = item.find('title').text
-        self._link = item.find('link').text
-        self._description = item.find('description').text
-        self._pub_date = pd.to_datetime(item.find('pubDate').text)
-        self._source = item.find('source').text
 
     def __find(self, tag):
         return self.item.find(tag).text
@@ -74,9 +69,9 @@ class ArticleParser:
             'description': self.description,
             'pub_date': self.pub_date,
             'source': self.source,
-            'body_text': self.body_text
+            'body_text': self.body_text,
         }
-    
+
     def text_description(self) -> str:
         return Scraper().get_desc_text(self.description)
 

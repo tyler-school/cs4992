@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 import Nav from './Nav';
 
 function fetchData() {
-  const dataToSend = { name: "susan" }; // Create an object with the data to be sent
+  const dataToSend = { name: "Susan" }; // Create an object with the data to be sent
 
   return fetch("/api/hello/", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", 
     },
     body: JSON.stringify(dataToSend),
   })
@@ -27,7 +27,7 @@ function fetchData() {
 
 
 const HomePage: React.FC = () => {
-  const [apiData, setApiData] = useState(null);
+  const [apiData, setApiData] = useState<{ message: string } | null>(null);
 
   useEffect(() => {
     fetchData()
@@ -35,6 +35,8 @@ const HomePage: React.FC = () => {
         setApiData(data); // Save the API response data in the state
       });
   }, []);
+
+  const messageValue = apiData && apiData.message;
 
   return (
     <div className="App">
@@ -51,8 +53,7 @@ const HomePage: React.FC = () => {
       </div>
 
       <h1>Welcome to My Homepage</h1>
-      {/* Render the API response data */}
-      {apiData && <pre>{JSON.stringify(apiData, null, 2)}</pre>}
+      {<p>{messageValue ? messageValue : 'Loading...'}</p>}
       <ArticleList />
       <div className="SearchBar">
         <input type="text" placeholder="Enter your search here" />

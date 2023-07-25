@@ -1,8 +1,6 @@
 from fastapi import FastAPI
-import datetime
-from back_end.search import SearchEngine
-from back_end.article import ArticleParser
 from typing import List
+from hello import hello_function
 
 app = FastAPI()
 
@@ -14,22 +12,20 @@ def read_root():
 def read_other():
     return {"Other API call"}
 
-@app.get("/search/{term}/{start_date}/{end_date}")
-def read_search(term, start_date, end_date):
-
-    searcher = SearchEngine()
     
-    start_date_object = datetime.strptime(start_date, '%Y-%m-%d') # 2021-01-28
-    end_date_object = datetime.strptime(end_date, '%Y-%m-%d')
-    result: List[ArticleParser] = searcher.get_news(term, start_date_object, end_date_object)
+@app.post("/api/hello/")
+def read_hello(request_data: dict):
+    name = request_data.get("name", "Guest")  # Get the "name" from request_data, default to "Guest" if not present
 
-    
+    # Call the hello_function with the "name" parameter and get the response message
+    response_message = hello_function(name)
 
-    return [a.to_dict() for a in result]
-
-    
+    return {"message": response_message}
 
 
+@app.get("/other")
+def read_other():
+    return {"message": "Other API call"}
     
 
     

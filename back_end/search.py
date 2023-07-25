@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from enums import RecentPeriod
 from article import ArticleParser, parse_news_items
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from scraping.scrape import Scraper
 
 class SearchEngine:
@@ -18,9 +18,7 @@ class SearchEngine:
     def _generate_search_url(
         self,
         search_term: str,
-        start_date: datetime = None,
-        end_date: datetime = None,
-        period: RecentPeriod = None):
+        days: int):
         """
         Generates a search URL for the given search term and data filter.
         If neither start_date nor end_date are passed, no time filter will be applied.
@@ -31,37 +29,24 @@ class SearchEngine:
             period: A RecentPeriod enum value indicating a period length from before today to
             filter by.
         """
-        if period is not None:
-            if start_date is not None or end_date is not None:
-                raise Exception("Cannot specify both a period and a start/end date.")
-            start_date, end_date = period.get_date_range()
+        start_string = date.today()
+        # truncate at 10 to remove seconds and milliseconds
+        end_string = str(datetime.today() - timedelta(days=days))[:10]
 
-        elif start_date is not None:
-            end_date = datetime.today() if end_date is None else end_date
-
-        if start_date is not None and end_date is not None:
-            start_string = start_date.strftime('%Y-%m-%d')
-            end_string = end_date.strftime('%Y-%m-%d')
-            time_filter = f'after:{start_string} before:{end_string}'
-        else:
-            time_filter = ''
+        time_filter = f'after:{end_string}+before:{start_string}'
         url = (f'https://news.google.com/rss/search?q={search_term}+{time_filter}'
                f'&hl=en-US&gl=US&ceid=US:en')
         return url
 
     def get_news(self,
                  search_term: str,
-                 start_date_object: datetime = None,
-                 end_date_object: datetime = None,
-                 period: RecentPeriod = None):
+                 days: int):
         """
         Searches Google News for the given search term and data filter, and returns
         a DataFrame containing the news items.
         """
         url = self._generate_search_url(search_term=search_term,
-                                        start_date=start_date_object,
-                                        end_date=end_date_object,
-                                        period=period)
+                                        days=days)
         
         print(f"url: {url}")
         response = requests.get(url)
@@ -75,7 +60,6 @@ class SearchEngine:
         # For getting text descriptions:
         #print([a.text_description() for a in news_items])
         news_items = news_items[:self.max_results]
-        print(len(news_items))
         return news_items
 
 if __name__ == '__main__':
@@ -84,6 +68,6 @@ if __name__ == '__main__':
     # search_term = input('Enter your search term here: ')
     # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
     search_term = 'mercedes vortices'
-    news.get_news(search_term, period=RecentPeriod.THIS_MONTH)
+    news.get_news(search_term, days=30)
     end_time = time.time()
     print(f'Execution time: {end_time - start_time:.2f} seconds')

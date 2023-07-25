@@ -13,7 +13,7 @@ class Scraper():
                 f.write(link + "\n")
 
         title = soup.find('title')
-        print(title.text)
+        # print(title.text)
         paragraphs = soup.find_all('p')
         lists = soup.find_all('li')
         #list_result = self.filter_lists(lists)
@@ -52,18 +52,13 @@ class Scraper():
             return desc
 
     def _scrape_desc_text(self, html) -> list[str]:
+
         
         soup = BeautifulSoup(html, features="lxml")
 
-        # In case there are multiple a tags, join the descriptions of all of them.
-        links = soup.find_all('a')
-        text = []
-
-        for a in links:
-            text.append(a.string)
-
-        return '/n'.join(text)
-
+        link = soup.find('a')
+        if link:
+            return link.string
 
 if __name__ == "__main__":
     

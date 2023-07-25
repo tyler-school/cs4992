@@ -13,7 +13,7 @@ class Scraper():
                 f.write(link + "\n")
 
         title = soup.find('title')
-        print(title.text)
+        # print(title.text)
         paragraphs = soup.find_all('p')
         lists = soup.find_all('li')
         #list_result = self.filter_lists(lists)
@@ -52,6 +52,7 @@ class Scraper():
             return desc
 
     def _scrape_desc_text(self, html) -> list[str]:
+
         
         soup = BeautifulSoup(html, features="lxml")
 

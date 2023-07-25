@@ -5,6 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 from textblob import TextBlob
+from bias import BiasDetector
 
 from scraping.scrape import Scraper
 
@@ -76,6 +77,12 @@ class ArticleParser:
         """
         text_blob_object = TextBlob(self.body_text) 
         return text_blob_object.sentiment
+    
+    @property
+    def bias(self):
+        """Returns the political bias of the article's source"""
+        bias = BiasDetector()
+        return bias.find_bias(self.source)
 
     def to_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every derivable field """
@@ -85,7 +92,8 @@ class ArticleParser:
             'description': self.description,
             'pub_date': self.pub_date,
             'source': self.source,
-            'body_text': self.body_text
+            'body_text': self.body_text,
+            'sentiment': self.sentiment
         }
     
     def text_description(self) -> str:

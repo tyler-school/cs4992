@@ -1,14 +1,16 @@
-// EditPage.tsx (Updated)
-
 import React, { useState } from 'react';
-import { Grid, Button } from '@mui/material'; // Import the Grid and Button components
+import { Grid, Button, TextField, InputAdornment } from '@mui/material'; // Import the Grid, Button, and InputAdornment components
 import Form from './Form';
 import { IconButton } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import HomeIcon from '@mui/icons-material/Home'; // Import the HomeIcon
+
 const EditPage: React.FC = () => {
   const [forms, setForms] = useState([
     { id: 1, initialSearch: 'Initial value for Form 1', initialTime: 'Time 1' },
   ]);
+
+  const [timeCycle, setTimeCycle] = useState('');
 
   const addForm = () => {
     const newFormId = forms.length + 1;
@@ -38,17 +40,29 @@ const EditPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <div style ={{ position: 'fixed', bottom: '20px', left: '20px'}}>
-        <IconButton style={{ fontSize: '50', color: 'green'}} onClick={addForm}>
+
+      {/* Time Cycle input and "Add Form" button */}
+      <div style={{ position: 'fixed', bottom: '20px', left: '20px', display: 'flex', alignItems: 'center' }}>
+        <TextField
+          label="Time"
+          value={timeCycle}
+          onChange={(e) => setTimeCycle(e.target.value)}
+          variant="outlined"
+          style={{ width: '150px', marginRight: '10px', backgroundColor: '#fff' }}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
+          }}
+        />
+
+        <IconButton style={{ fontSize: '50', color: 'green' }} onClick={addForm}>
           <AddCircleIcon />
         </IconButton>
       </div>
-      
 
       {/* Home button */}
       <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
         <Button variant="contained" color="primary" component="a" href="/">
-          Home
+          <HomeIcon /> Home
         </Button>
       </div>
     </div>
@@ -56,6 +70,3 @@ const EditPage: React.FC = () => {
 };
 
 export default EditPage;
-
-//FAB import that make sure 
-//Import icons too

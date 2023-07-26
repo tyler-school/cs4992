@@ -8,6 +8,7 @@ from json import load, dumps
 from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
+import os
 
 app = FastAPI()
 
@@ -23,13 +24,13 @@ class HomePage(BaseModel):
 def read_root():
     return {"message": "Root API call"}
 
-# @app.get("/search/{term}/{days}")
-# def read_search(term: str, days: int, max_results: int=15):
+@app.get("/search/{term}/{days}")
+def read_search(term: str, days: int, max_results: int=15):
 
-#     searcher = SearchEngine(max_results=max_results)
-#     result: list[ArticleParser] = searcher.get_news(term, days)
+    searcher = SearchEngine(max_results=max_results)
+    result: list[ArticleParser] = searcher.get_news(term, days)
 
-#     return [a.text_description() for a in result]
+    return [a.text_description() for a in result]
 
 @app.post("/home/{username}")
 def make_home_page(username: str, item: HomePage):
@@ -49,11 +50,11 @@ def get_home_page(username: str):
     page data as a list of searches, else errors.
     """
     try:
-        with open('home_pages\will_home_page.json') as file:
+        with open(os.path.join('home_pages', f'{username}_home_page.json')) as file:
             data = load(file)
-            user_data = HomePage(**data["home_page"]) 
+            user_data = HomePage(**data)
 
-            if user_data.username == username: 
+            if user_data.username == username:
                 return get_searches(user_data.searches)
             else:
                 raise HTTPException(status_code=404, detail=f"User '{username}' not found")

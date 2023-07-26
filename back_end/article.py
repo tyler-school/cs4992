@@ -50,7 +50,7 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(self._link, allow_redirects=True)
+        html_text = requests.get(self.link, allow_redirects=True)
         soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')

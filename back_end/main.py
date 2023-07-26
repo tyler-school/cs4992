@@ -31,8 +31,8 @@ def read_search(term: str, days: int, max_results: int=15):
     news: list[ArticleParser] = searcher.get_news(term, days)
 
     result: list[dict] = [n.to_search_dict() for n in news]
-
-    return dumps(result)
+    #print(result[0])
+    return result
 
 @app.post("/home/{username}")
 def make_home_page(username: str, item: HomePage):
@@ -65,10 +65,12 @@ def get_home_page(username: str):
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
 
-@app.get("home/summary")
-def get_summary(item):
-    item = ArticleParser(item)
-    return item.summary()
+@app.post("/summary")
+def get_summary(item: dict):
+    # item: ArticleParser = ArticleParser(item)
+    # item.from_dict()
+    article = ArticleParser(item)
+    return article.summary()
 
 @app.patch("/home/{username}")
 def patch_home_page(username: str, item: HomePage):

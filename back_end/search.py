@@ -5,6 +5,7 @@ import time
 import xml.etree.ElementTree as ET
 from enums import RecentPeriod
 from article import ArticleParser, parse_news_items
+from json import dumps
 
 from datetime import datetime, timedelta, date
 from scraping.scrape import Scraper
@@ -68,6 +69,7 @@ if __name__ == '__main__':
     # search_term = input('Enter your search term here: ')
     # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
     search_term = 'mercedes vortices'
-    news.get_news(search_term, days=30)
+    news = news.get_news(search_term, days=30)
+    print(news[0].body_text)
     end_time = time.time()
     print(f'Execution time: {end_time - start_time:.2f} seconds')

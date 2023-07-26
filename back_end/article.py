@@ -1,13 +1,10 @@
-from xml.etree.ElementTree import ElementTree, fromstring
+from xml.etree.ElementTree import fromstring, Element
 from typing import List
-import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 from textblob import TextBlob
-from bias import BiasDetector
 from summarize import Summarizer
-
 from scraping.scrape import Scraper
 
 class ArticleParser:
@@ -21,36 +18,48 @@ class ArticleParser:
 <source url="https://www.bbc.co.uk">BBC</source>
     """
 
-    def __init__(self, item):
-        self.item = item
+    def __init__(self, item: dict | Element):
+        if isinstance(item, dict):
+            self.item = item
+        elif isinstance(item, Element):
+            self.title = self.__find(item, 'title')
+            self.link = self.__find(item, 'link')
+            self.description = self.__find(item, 'description')
+            self.pub_date = self.__find(item, 'pub_date')
+            self.source = self.__find(item, 'source')
 
-    def __find(self, tag):
-        return self.item.find(tag).text
+            self.item = {'title': self.title,
+                         'link': self.link,
+                         'description': self.description,
+                         'pub_date': self.pub_date,
+                         'source': self.source}
+            
+    def __find(self, xml, tag):
+        return xml.find(tag).text
 
     @property
     def title(self):
-        return self.__find('title')
+        return self.item['title']
 
     @property
     def link(self):
-        return self.__find('link')
+        return self.item['link']
 
     @property
     def description(self):
-        description = self.__find('description')
-        return description
+        return self.item['description']
 
     @property
     def pub_date(self):
-        return pd.to_datetime(self.__find('pubDate'))
+        return pd.to_datetime(self.item['pubDate'])
 
     @property
     def source(self):
-        return self.__find('source')
+        return self.item['source']
     
     @property
-    def body_text(self):
-        html_text = requests.get(self._link, allow_redirects=True) 
+    def body_text(self) -> str:
+        html_text = requests.get(self.link, allow_redirects=True) 
         soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -76,8 +85,9 @@ class ArticleParser:
     @property
     def bias(self):
         """Returns the political bias of the article's source"""
-        bias = BiasDetector()
-        return bias.find_bias(self.source)
+        pass
+        #bias = BiasDetector()
+        #return bias.find_bias(self.source)
     
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
@@ -87,24 +97,24 @@ class ArticleParser:
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
         return {
-            'title': self.title,
-            'link': self.link,
-            'description': self.description,
-            'date': self.pub_date,
-            'source': self.source,
-            'sentiment': self.sentiment,
-            'bias': self.bias
+            'title': self.__title,
+            'link': self.__link,
+            'description': self.__description,
+            'date': self.__pub_date,
+            'source': self.__source,
+            'sentiment': self.__sentiment,
+            'bias': self.__bias
         }
     
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
         return {
-            'title': self.title,
-            'source': self.source,
-            'date': self.pub_date,
-            'link': self.link
+            'title': self.__title,
+            'source': self.__source,
+            'date': self.__pub_date,
+            'link': self.__link
         }
-
+        
     def text_description(self) -> str:
         return Scraper().get_desc_text(self.description)
 

@@ -7,8 +7,7 @@ import requests
 from textblob import TextBlob
 from bias import BiasDetector
 from summarize import Summarizer
-
-from scraping.scrape import Scraper
+from scraping.scrape import Scraper 
 
 class ArticleParser:
     """
@@ -91,10 +90,10 @@ class ArticleParser:
         return {
             'title': self.title,
             'link': self.link,
-            'description': self.description,
+            'description': self.text_description(),
             'date': self.pub_date,
             'source': self.source,
-            'sentiment': self.sentiment,
+            'sentiment': self.sentiment, 
             'bias': self.bias
         }
     

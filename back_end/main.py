@@ -4,7 +4,7 @@ from typing import List
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
-from json import load, dumps
+from json import load, dumps, loads
 from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
@@ -55,7 +55,7 @@ def get_home_page(username: str):
             user_data = HomePage(**data["home_page"]) 
 
             if user_data.username == username: 
-                return get_searches(user_data.searches)
+                return __get_searches(user_data.searches)
             else:
                 raise HTTPException(status_code=404, detail=f"User '{username}' not found")
     except FileNotFoundError: 
@@ -63,7 +63,7 @@ def get_home_page(username: str):
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
         
-def get_searches(searches: dir): 
+def __get_searches(searches: dir): 
     searcher = SearchEngine(max_results=2) 
     search_data = {}
     print(searches)

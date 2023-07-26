@@ -69,3 +69,19 @@ def get_home_page(username: str):
 def get_summary(item):
     item = ArticleParser(item)
     return item.summary()
+
+@app.patch("/home/{username}")
+def patch_home_page(username: str, item: HomePage):
+
+    try:
+        home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
+        page_obj = loads(home_page_file.read())
+
+        (item.searches).append(page_obj["searches"])
+        home_page_file.write(dumps(item.model_dump()))
+        raise HTTPException(status_code=200, detail="File Successfully Updated")
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="File not found")
+    except ValidationError as ve:
+        raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+

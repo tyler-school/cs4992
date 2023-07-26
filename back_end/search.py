@@ -11,7 +11,7 @@ from scraping.scrape import Scraper
 
 class SearchEngine:
 
-    def __init__(self, max_results: int = 1000):
+    def __init__(self, max_results: int = 15):
         self.max_results = max_results
 
 
@@ -70,10 +70,13 @@ class SearchEngine:
         # streaming by making a generator (iterator) might be future solution look up (def __enter__ too)
         
         # printing all info in dict (json) format for each rss result
-        print([a.to_dict() for a in news_items])
+        #print([a.to_dict() for a in news_items])
 
         # For getting text descriptions:
-        print([a.text_description() for a in news_items])
+        #print([a.text_description() for a in news_items])
+        news_items = news_items[:self.max_results]
+        print(len(news_items))
+        return news_items
 
 if __name__ == '__main__':
     start_time = time.time()

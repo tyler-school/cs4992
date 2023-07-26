@@ -23,11 +23,6 @@ class ArticleParser:
 
     def __init__(self, item):
         self.item = item
-        self._title = item.find('title').text
-        self._link = item.find('link').text
-        self._description = item.find('description').text
-        self._pub_date = pd.to_datetime(item.find('pubDate').text)
-        self._source = item.find('source').text
 
     def __find(self, tag):
         return self.item.find(tag).text
@@ -55,7 +50,7 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(html_text.url, allow_redirects=True)    
+        html_text = requests.get(self._link, allow_redirects=True) 
         soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -110,7 +105,7 @@ class ArticleParser:
             'date': self.pub_date,
             'link': self.link
         }
-    
+
     def text_description(self) -> str:
         return Scraper().get_desc_text(self.description)
 

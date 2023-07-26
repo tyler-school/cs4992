@@ -79,7 +79,6 @@ class ArticleParser:
         bias = BiasDetector()
         return bias.find_bias(self.source)
     
-    @property
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
         summarizer = Summarizer()

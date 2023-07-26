@@ -65,3 +65,7 @@ def get_home_page(username: str):
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
 
+@app.get("home/summary")
+def get_summary(item):
+    item = ArticleParser(item)
+    return item.summary()

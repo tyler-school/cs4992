@@ -7,7 +7,8 @@ class Scraper():
     def scrape(self, link):
         try:
             html_text = requests.get(link)
-            soup = BeautifulSoup(html_text.content.decode('utf-8'), features="lxml")
+            # soup = BeautifulSoup(html_text.content.decode('utf-8'), features="lxml")
+            soup = BeautifulSoup(html_text.content.decode('utf-8'))
         except:
             with open('dataset_scraping/ulta/errored.txt', 'a', encoding="utf-8") as f:
                 f.write(link + "\n")
@@ -54,7 +55,8 @@ class Scraper():
     def _scrape_desc_text(self, html) -> list[str]:
 
         
-        soup = BeautifulSoup(html, features="lxml")
+        # soup = BeautifulSoup(html, features="lxml")
+        soup = BeautifulSoup(html)
 
         link = soup.find('a')
         if link:

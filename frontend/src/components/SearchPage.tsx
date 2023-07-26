@@ -11,10 +11,19 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { RepeatOneSharp } from '@mui/icons-material';
 
 interface SearchResult {
-  fact: string;
+  url: string;
   length: number;
+
+  // search: string;
+  // start_date: string;
+  // end_date: string;
+  // yyyy-mm-dd
+  ///search/{term}/{start_date}/{end_date}
+  ///ukraine/2022-02-24/2023-7-25
+  //search/{ukraine}/{2022-02-24}/{2023-7-25}
 }
 
 const SearchPage: React.FC = () => {
@@ -24,16 +33,18 @@ const SearchPage: React.FC = () => {
 
   const handleSearch = () => {
     axios
-      .get('https://catfact.ninja/fact')
+      .get('http://127.0.0.1:8000/search/ukraine/2022-02-24/2023-7-25')
       .then((response) => {
         // Handle the response here
         console.log(response.data);
         // Extract the relevant data from the API response (this may vary depending on the API)
-        const result: SearchResult = {
-          fact: response.data.fact,
-          length: response.data.length,
-        };
-        setSearchResults([result]); // Store the response in state
+        if (response.data.length > 0) {
+          const result: SearchResult = {
+            url: response.data[0].url, // Assuming the URL is accessible as response.data[0].url
+            length: response.data[0].url.length,
+          };
+          setSearchResults([result]); // Store the response in state
+        }
       })
       .catch((error) => {
         // Handle errors here
@@ -82,26 +93,23 @@ const SearchPage: React.FC = () => {
           <Grid item xs={12}>
             <Typography variant="h4">Search Results</Typography>
           </Grid>
-          {searchResults.map((result, index) => (
-            <Grid item xs={8} key={index} 
-            style={{paddingBottom: '15px', backgroundColor: index % 2 === 0 ? '#f0f0f0' : '#ffffff', // Apply alternating row colors
-}}>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <Typography variant="body1">Fact:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">{result.fact}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">Length:</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1">{result.length}</Typography>
-                </Grid>
+          {/* Display top search result */}
+          <Grid item xs={8} style={{ paddingBottom: '15px', backgroundColor: '#f0f0f0' }}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="body1">Fact:</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">{searchResults[0].url}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">Length:</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">{searchResults[0].length}</Typography>
               </Grid>
             </Grid>
-          ))}
+          </Grid>
         </Grid>
       )}
     </div>

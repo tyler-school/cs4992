@@ -8,13 +8,13 @@
                 "days": 5
             },
             {
-                "term": "hi!",
+                "term": "hello!",
                 "days": 3
             },
             {
-                "term": "sup!",
+                "term": "hello!",
                 "days": 2
             }
-        ] 
+        ]
     }
 }

@@ -8,7 +8,7 @@ class BiasDetector:
         self.stop = set(word.upper() for word in stopwords.words("english")) 
 
         # Importing the bias dataset 
-        bias_dataset = pd.read_csv("back_end/bias/allsides.csv")
+        bias_dataset = pd.read_csv("bias/allsides.csv")
         bias_dataset = bias_dataset.reset_index()
 
         # Preprocess bias_dataset names and stores it in a set

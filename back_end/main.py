@@ -1,14 +1,13 @@
 from fastapi import FastAPI
 from datetime import datetime, timedelta
-from search import SearchEngine
-from article import ArticleParser
 from typing import List
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
-from json import load
+from json import load, dumps
 from pydantic import BaseModel
-from json import loads, dumps
+from search import SearchEngine
+from article import ArticleParser
 
 app = FastAPI()
 
@@ -24,9 +23,8 @@ class HomePage(BaseModel):
 def read_root():
     return {"message": "Root API call"}
 
-@app.get("/search/{term}/{days}")
-def read_search(term: str, days: int, max_results: int=15):
-
+ @app.get("/search/{term}/{days}")
+ def read_search(term: str, days: int, max_results: int=15):
     searcher = SearchEngine(max_results=max_results)
     news: list[ArticleParser] = searcher.get_news(term, days)
 
@@ -57,13 +55,22 @@ def get_home_page(username: str):
             user_data = HomePage(**data["home_page"]) 
 
             if user_data.username == username: 
-                return user_data.searches
+                return get_searches(user_data.searches)
             else:
                 raise HTTPException(status_code=404, detail=f"User '{username}' not found")
-    except FileNotFoundError:
-        raise HTTPException(status_code=500, detail="File not found")
+    except FileNotFoundError: 
+       raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+        
+def get_searches(searches: dir): 
+    searcher = SearchEngine(max_results=2) 
+    search_data = {}
+    print(searches)
+    for search in searches:
+        news: list[ArticleParser] = searcher.get_news(search.term, search.days)
+        search_data[search.term] = [n.to_search_dict() for n in news]
+    return search_data    
 
 @app.get("home/summary")
 def get_summary(item):
@@ -84,4 +91,3 @@ def patch_home_page(username: str, item: HomePage):
         raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
-

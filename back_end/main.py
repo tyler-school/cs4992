@@ -2,9 +2,13 @@ from fastapi import FastAPI
 from datetime import datetime, timedelta
 from search import SearchEngine
 from article import ArticleParser
+from typing import List
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
+from pydantic import BaseModel, ValidationError
+from json import load
 from pydantic import BaseModel
 from json import loads, dumps
-
 
 app = FastAPI()
 
@@ -18,7 +22,7 @@ class HomePage(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"Root API call"}
+    return {"message": "Root API call"}
 
 @app.get("/search/{term}/{days}")
 def read_search(term: str, days: int, max_results: int=15):
@@ -41,8 +45,20 @@ def make_home_page(username: str, item: HomePage):
 
 @app.get("/home/{username}")
 def get_home_page(username: str):
+    """
+    Reads from the home page JSON. If the user exists, returns the home
+    page data as a list of searches, else errors.
+    """
+    try:
+        with open('home_page.json') as file:
+            data = load(file)
+            user_data = HomePage(**data["home_page"]) 
 
-    home_page_file = open(f"home_pages/{username}_home_page.json", 'r')
-    page_obj = loads(home_page_file.read())
-
-    return page_obj
+            if user_data.username == username: 
+                return user_data.searches
+            else:
+                raise HTTPException(status_code=404, detail=f"User '{username}' not found")
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="File not found")
+    except ValidationError as ve:
+        raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")

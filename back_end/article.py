@@ -38,8 +38,8 @@ class ArticleParser:
     @property
     def description(self):
         description = self.__find('description')
-        return description
-
+        return Scraper().get_desc_text(description)
+    
     @property
     def pub_date(self):
         return pd.to_datetime(self.__find('pubDate'))
@@ -104,9 +104,6 @@ class ArticleParser:
             'date': self.pub_date,
             'link': self.link
         }
-
-    def text_description(self) -> str:
-        return Scraper().get_desc_text(self.description)
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """

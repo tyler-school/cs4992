@@ -51,6 +51,8 @@ class ArticleParser:
     @property
     def body_text(self):
         html_text = requests.get(self._link, allow_redirects=True) 
+        html_text = requests.get(html_text.url, allow_redirects=True) 
+        
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')

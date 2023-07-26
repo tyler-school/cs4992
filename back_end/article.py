@@ -7,8 +7,7 @@ import requests
 from textblob import TextBlob
 from bias import BiasDetector
 from summarize import Summarizer
-
-from scraping.scrape import Scraper
+from scraping.scrape import Scraper 
 
 class ArticleParser:
     """
@@ -50,7 +49,7 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(self._link, allow_redirects=True) 
+        html_text = requests.get(self.link, allow_redirects=True) 
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -89,10 +88,10 @@ class ArticleParser:
         return {
             'title': self.title,
             'link': self.link,
-            'description': self.description,
+            'description': self.text_description(),
             'date': self.pub_date,
             'source': self.source,
-            'sentiment': self.sentiment,
+            'sentiment': self.sentiment, 
             'bias': self.bias
         }
     

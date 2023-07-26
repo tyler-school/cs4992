@@ -4,6 +4,9 @@ import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
+from textblob import TextBlob
+from bias import BiasDetector
+from summarize import Summarizer
 
 from scraping.scrape import Scraper
 
@@ -59,17 +62,50 @@ class ArticleParser:
         soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')
+        # todo remove two word lists
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
+    
+    @property
+    def sentiment(self):
+        """
+        Finds the sentiment (polarity, subjectivity) where the polarity
+        is [-1.0, 1.0] and the subjectivity is 0.0, 1.0]. Returns a named tuple
+        of the form Sentiment(polarity, subjectivity). 
+        """
+        text_blob_object = TextBlob(self.body_text) 
+        return text_blob_object.sentiment
+    
+    @property
+    def bias(self):
+        """Returns the political bias of the article's source"""
+        bias = BiasDetector()
+        return bias.find_bias(self.source)
+    
+    @property
+    def summary(self):
+        # need to physically paste in the key for demo into summarize.py
+        summarizer = Summarizer()
+        return summarizer.summarize(self.body_text)
 
-    def to_dict(self) -> dict:
-        """ Converts this 'Article' into a dict with every derivable field """
+    def to_search_dict(self) -> dict:
+        """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
         return {
             'title': self.title,
             'link': self.link,
             'description': self.description,
-            'pub_date': self.pub_date,
+            'date': self.pub_date,
             'source': self.source,
-            'body_text': self.body_text,
+            'sentiment': self.sentiment,
+            'bias': self.bias
+        }
+    
+    def to_home_dict(self) -> dict:
+        """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
+        return {
+            'title': self.title,
+            'source': self.source,
+            'date': self.pub_date,
+            'link': self.link
         }
 
     def text_description(self) -> str:

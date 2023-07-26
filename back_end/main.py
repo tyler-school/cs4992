@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from datetime import datetime
+from datetime import datetime, timedelta
 from search import SearchEngine
 from article import ArticleParser
 from typing import List
@@ -7,7 +7,8 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
 from json import load
-
+from pydantic import BaseModel
+from json import loads, dumps
 
 app = FastAPI()
 
@@ -16,29 +17,29 @@ class Search(BaseModel):
     days: int
 class HomePage(BaseModel):
     username: str
-    searches: List[Search]
+    searches: list[Search]
+        
 
 @app.get("/")
 def read_root():
     return {"message": "Root API call"}
 
-@app.get("/search/{term}/{start_date}/{end_date}")
-def read_search(term, start_date, end_date, max_results=15):
+@app.get("/search/{term}/{days}")
+def read_search(term: str, days: int, max_results: int=15):
 
-    searcher = SearchEngine(max_results=int(max_results))
-    
-    start_date_object = datetime.strptime(start_date, '%Y-%m-%d') # 2021-01-28
-    end_date_object = datetime.strptime(end_date, '%Y-%m-%d')
-    result: List[ArticleParser] = searcher.get_news(term, start_date_object, end_date_object)
+    searcher = SearchEngine(max_results=max_results)
+    result: list[ArticleParser] = searcher.get_news(term, days)
 
     return [a.text_description() for a in result]
 
 @app.post("/home/{username}")
-def make_home_page(
-    userID: int,
-    item: HomePage):
-    home_page_file = open("home_page.json", 'rw')
-    file_contents: dict = load(home_page_file.read())
+def make_home_page(username: str, item: HomePage):
+
+    # Create a new file
+    home_page_file = open(f"home_pages/{username}_home_page.json", 'x')
+
+    # Write homePage info to article
+    home_page_file.write(dumps(item.model_dump()))
 
     return item
 

@@ -23,9 +23,8 @@ class Summarizer():
         SKLLMConfig.set_openai_org(self.OPENAI_ORG_ID)
 
         gpt_summarizer = GPTSummarizer(openai_model = "gpt-3.5-turbo", max_words = max)
-        print("making api call $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         summaries = gpt_summarizer.fit_transform(wrap)
-        print(summaries)
+        return "".join(summaries)
     
 if __name__ == '__main__':
     args = sys.argv[1:]

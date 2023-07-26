@@ -50,7 +50,7 @@ def get_home_page(username: str):
     page data as a list of searches, else errors.
     """
     try:
-        with open('home_page.json') as file:
+        with open(f"home_pages/{username}_home_page.json") as file:
             data = load(file)
             user_data = HomePage(**data["home_page"]) 
 

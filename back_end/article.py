@@ -38,9 +38,6 @@ class ArticleParser:
     @property
     def description(self):
         description = self.__find('description')
-        # start = description.find('<p>') + 3
-        # end = description.find('</p>')
-        # return description[start:end]
         return description
 
     @property
@@ -53,17 +50,18 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(self._link, allow_redirects=True)
-        #print(html_text.url)
-
-        html_text = requests.get(html_text.url, allow_redirects=True)
-        #print(html_text.url)
-        
+        html_text = requests.get(self._link, allow_redirects=True) 
         soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')
-        # todo remove two word lists
-        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
+        filtered_list = []
+
+        # filtering out list elements with less than 2 words
+        for l in lists:
+            if l.text.count(" ") > 2:
+                filtered_list.append(l)
+
+        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in filtered_list])
     
     @property
     def sentiment(self):

@@ -62,3 +62,21 @@ def get_home_page(username: str):
         raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+    
+    
+    
+@app.patch("/home/{username}")
+def patch_home_page(username: str, item: HomePage):
+
+    try:
+        home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
+        page_obj = loads(home_page_file.read())
+
+        page_obj["searches"].append(HomePage().searches)
+        home_page_file.write(dumps(item.model_dump()))
+        raise HTTPException(status_code=200, detail="File Successfully Updated")
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="File not found")
+    except ValidationError as ve:
+        raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+

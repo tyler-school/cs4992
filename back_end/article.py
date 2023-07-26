@@ -53,18 +53,18 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(self._link, allow_redirects=True)
+        html_text = requests.get(self.link, allow_redirects=True)
         #print(html_text.url)
-
+ 
         html_text = requests.get(html_text.url, allow_redirects=True)
         #print(html_text.url)
-        
-        soup = BeautifulSoup(html_text.content.decode('utf-8'))
-        body = soup.find_all('p')
-        lists = soup.find_all('li')
+         
+        soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
+        body = soup.find_all('p') 
+        lists = soup.find_all('li') 
         # todo remove two word lists
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
-    
+     
     @property
     def sentiment(self):
         """

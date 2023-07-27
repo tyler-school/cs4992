@@ -5,8 +5,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'; // Import the Grid component
-import Logo from "/Users/anabellavivas/Documents/cs4992/frontend/src/components/artifind logo2.png";
-import SearchIcon from "/Users/anabellavivas/Documents/cs4992/frontend/src/components/searchicon.png";
+import Logo from "../assets/artifindlogo2.png";
+import SearchIcon from "../assets/searchicon.png";
 import './SearchPage.css';
 
 import '@fontsource/roboto/300.css';

@@ -9,7 +9,8 @@ URL = "https://www.google.com/"
 AUTHOR = "half of northeastern cs4992 summer 2 2023"
 AUTHOR_EMAIL = "furrier.t@northeastern.edu"
 REQUIRES_PYTHON = ">=3.7.0"
-REQUIRED = ["pandas", "requests>=2.0.0", "bs4", "fastapi", "uvicorn", "pydantic", "lxml", "sklearn"]
+REQUIRED = ["pandas", "requests>=2.0.0", "bs4", "fastapi", "uvicorn", "pydantic", "lxml", "scikit-learn",
+            "textblob", "scikit-llm"]
 
 
 DEV_REQUIRED = (

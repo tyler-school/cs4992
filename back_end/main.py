@@ -8,6 +8,7 @@ from json import load, dumps, loads
 from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
+import os
 
 app = FastAPI()
 
@@ -50,27 +51,27 @@ def get_home_page(username: str):
     page data as a list of searches, else errors.
     """
     try:
-        with open(f"home_pages/{username}_home_page.json") as file:
+        with open(os.path.join('home_pages', f'{username}_home_page.json')) as file:
             data = load(file)
-            user_data = HomePage(**data["home_page"]) 
+            user_data = HomePage(**data)
 
-            if user_data.username == username: 
+            if user_data.username == username:
                 return __get_searches(user_data.searches)
             else:
                 raise HTTPException(status_code=404, detail=f"User '{username}' not found")
-    except FileNotFoundError: 
+    except FileNotFoundError:
        raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
-        
-def __get_searches(searches: dir): 
+
+def __get_searches(searches: dir):
     searcher = SearchEngine(max_results=2) 
     search_data = {}
     print(searches)
     for search in searches:
         news: list[ArticleParser] = searcher.get_news(search.term, search.days)
         search_data[search.term] = [n.to_home_dict() for n in news]
-    return search_data    
+    return search_data
 
 @app.get("/home/summary")
 def get_summary(item):

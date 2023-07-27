@@ -7,7 +7,7 @@ import requests
 from textblob import TextBlob
 from bias import BiasDetector
 from summarize import Summarizer
-from scraping.scrape import Scraper 
+from scraping.scrape import Scraper
 
 class ArticleParser:
     """
@@ -38,7 +38,7 @@ class ArticleParser:
     def description(self):
         description = self.__find('description')
         return Scraper().get_desc_text(description)
-    
+
     @property
     def pub_date(self):
         return pd.to_datetime(self.__find('pubDate'))
@@ -49,9 +49,9 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(self.link, allow_redirects=True) 
-        html_text = requests.get(html_text.url, allow_redirects=True) 
-        
+        html_text = requests.get(self.link, allow_redirects=True)
+        html_text = requests.get(html_text.url, allow_redirects=True)
+
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -63,7 +63,7 @@ class ArticleParser:
                 filtered_list.append(l)
 
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in filtered_list])
-   
+
     @property
     def sentiment(self):
         """
@@ -79,7 +79,7 @@ class ArticleParser:
         """Returns the political bias of the article's source"""
         bias = BiasDetector()
         return bias.find_bias(self.source)
-    
+
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
         summarizer = Summarizer()
@@ -93,7 +93,7 @@ class ArticleParser:
             'description': self.text_description(),
             'date': self.pub_date,
             'source': self.source,
-            'sentiment': self.sentiment, 
+            'sentiment': self.sentiment,
             'bias': self.bias
         }
     

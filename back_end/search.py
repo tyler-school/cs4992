@@ -50,7 +50,10 @@ class SearchEngine:
                                         days=days)
         
         print(f"url: {url}")
-        response = requests.get(url)
+        try:
+            response = requests.get(url)
+        except ConnectionError as e:
+            raise ConnectionError("Network error. Check internet connection.")
         news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)
         # right now we can't even get that many articles, so it's not a problem
         # streaming by making a generator (iterator) might be future solution look up (def __enter__ too)

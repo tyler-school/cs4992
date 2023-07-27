@@ -22,17 +22,11 @@ class ArticleParser:
         if isinstance(item, dict):
             self.item = item
         elif isinstance(item, Element):
-            self.title = self.__find(item, 'title')
-            self.link = self.__find(item, 'link')
-            self.description = self.__find(item, 'description')
-            self.pub_date = self.__find(item, 'pub_date')
-            self.source = self.__find(item, 'source')
-
-            self.item = {'title': self.title,
-                         'link': self.link,
-                         'description': self.description,
-                         'pub_date': self.pub_date,
-                         'source': self.source}
+            self.item = {'title': self.__find(item, 'title'),
+                         'link': self.__find(item, 'link'),
+                         'description': self.__find(item, 'description'),
+                         'pub_date': self.__find(item, 'pubDate'),
+                         'source': self.__find(item, 'source')}
             
     def __find(self, xml, tag):
         return xml.find(tag).text
@@ -51,7 +45,7 @@ class ArticleParser:
 
     @property
     def pub_date(self):
-        return pd.to_datetime(self.item['pubDate'])
+        return pd.to_datetime(self.item['pub_date'])
 
     @property
     def source(self):
@@ -97,22 +91,22 @@ class ArticleParser:
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
         return {
-            'title': self.__title,
-            'link': self.__link,
-            'description': self.__description,
-            'date': self.__pub_date,
-            'source': self.__source,
-            'sentiment': self.__sentiment,
-            'bias': self.__bias
+            'title': self.title,
+            'link': self.link,
+            'description': self.description,
+            'date': self.pub_date,
+            'source': self.source,
+            'sentiment': self.sentiment,
+            'bias': self.bias
         }
     
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
         return {
-            'title': self.__title,
-            'source': self.__source,
-            'date': self.__pub_date,
-            'link': self.__link
+            'title': self.title,
+            'source': self.source,
+            'date': self.pub_date,
+            'link': self.link
         }
         
     def text_description(self) -> str:

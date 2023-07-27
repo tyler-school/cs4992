@@ -54,14 +54,14 @@ def get_home_page(username: str):
     try:
         with open(f"home_pages/{username}_home_page.json") as file:
             data = load(file)
-            user_data = HomePage(**data["home_page"]) 
+            user_data = HomePage(**data) 
 
             if user_data.username == username: 
                 return user_data.searches
             else:
                 raise HTTPException(status_code=404, detail=f"User '{username}' not found")
     except FileNotFoundError:
-        raise HTTPException(status_code=500, detail="File not found")
+        raise HTTPException(status_code=500, detail=f"File not found, try POST /home/{username}")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
 

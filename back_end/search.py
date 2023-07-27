@@ -21,13 +21,9 @@ class SearchEngine:
         days: int):
         """
         Generates a search URL for the given search term and data filter.
-        If neither start_date nor end_date are passed, no time filter will be applied.
         Args:
             search_term: The term to search for.
-            start_date: The start date for the search.
-            end_date: The end date for the search. Defaults to today if start date is passed.
-            period: A RecentPeriod enum value indicating a period length from before today to
-            filter by.
+            days: The range of dates to search in in the past
         """
         start_string = date.today()
         # truncate at 10 to remove seconds and milliseconds
@@ -35,7 +31,7 @@ class SearchEngine:
 
         time_filter = f'after:{end_string}+before:{start_string}'
         url = (f'https://news.google.com/rss/search?q={search_term}+{time_filter}'
-               f'&hl=en-US&gl=US&ceid=US:en')
+               f'&hl=en-GB&gl=GB&ceid=GB:en')
         return url
 
     def get_news(self,

@@ -72,7 +72,7 @@ def __get_searches(searches: dir):
         search_data[search.term] = [n.to_search_dict() for n in news]
     return search_data    
 
-@app.get("home/summary")
+@app.get("/home/summary")
 def get_summary(item):
     item = ArticleParser(item)
     return item.summary()

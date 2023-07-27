@@ -1,0 +1,20 @@
+{
+    "home_page":
+    {
+        "username": "will",
+        "searches": [
+            {
+                "term": "hello!",
+                "days": 5
+            },
+            {
+                "term": "hi!",
+                "days": 3
+            },
+            {
+                "term": "sup!",
+                "days": 2
+            }
+        ] 
+    }
+}

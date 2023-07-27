@@ -7,8 +7,7 @@ import requests
 from textblob import TextBlob
 from bias import BiasDetector
 from summarize import Summarizer
-
-from scraping.scrape import Scraper
+from scraping.scrape import Scraper 
 
 class ArticleParser:
     """
@@ -38,8 +37,8 @@ class ArticleParser:
     @property
     def description(self):
         description = self.__find('description')
-        return description
-
+        return Scraper().get_desc_text(description)
+    
     @property
     def pub_date(self):
         return pd.to_datetime(self.__find('pubDate'))
@@ -50,13 +49,8 @@ class ArticleParser:
     
     @property
     def body_text(self):
-<<<<<<< Updated upstream
         html_text = requests.get(self._link, allow_redirects=True) 
-=======
-        html_text = requests.get(self.link, allow_redirects=True) 
         html_text = requests.get(html_text.url, allow_redirects=True) 
-        
->>>>>>> Stashed changes
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -95,10 +89,10 @@ class ArticleParser:
         return {
             'title': self.title,
             'link': self.link,
-            'description': self.description,
+            'description': self.text_description(),
             'date': self.pub_date,
             'source': self.source,
-            'sentiment': self.sentiment,
+            'sentiment': self.sentiment, 
             'bias': self.bias
         }
     
@@ -110,9 +104,6 @@ class ArticleParser:
             'date': self.pub_date,
             'link': self.link
         }
-
-    def text_description(self) -> str:
-        return Scraper().get_desc_text(self.description)
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """

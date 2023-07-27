@@ -8,6 +8,13 @@ src/App.css
   align-items: center;
 }
 
+.containerlogo{ 
+  height: 0vh;
+  width: 5000vw; 
+  justify-content: center;
+  }
+
+
 h1 {
   font-size: 2rem;
   margin-bottom: 20px;
@@ -18,8 +25,6 @@ h3 {
   text-align: center;
   margin-top: 10px;
 }
-
-
 
 button {
   padding: 10px 20px;

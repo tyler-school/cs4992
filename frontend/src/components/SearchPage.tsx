@@ -5,6 +5,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'; // Import the Grid component
+import Logo from "/Users/anabellavivas/Documents/cs4992/frontend/src/components/artifind logo2.png";
+import SearchIcon from "/Users/anabellavivas/Documents/cs4992/frontend/src/components/searchicon.png";
 import './SearchPage.css';
 
 import '@fontsource/roboto/300.css';
@@ -43,9 +45,21 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="SearchPage">
-      <Typography variant="h3" className="SearchHeading" style={{ marginTop: '20px' }}>
-        Search Page
-      </Typography>
+      <div className="Logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <Box
+    component="img"
+    sx={{
+      height: 200,
+      alignSelf: 'center',
+      display: 'flex', // Set the Box as a flex container
+      alignItems: 'center', // Center the content vertically
+      justifyContent: 'center', // Center the content horizontally
+    }}
+    alt="Artifind"
+    src={Logo}
+  >
+  </Box>
+</div>
       <div className="SearchContainer">
         {/* Wrap the search bar in a Box component */}
         <Box
@@ -58,17 +72,25 @@ const SearchPage: React.FC = () => {
         >
           <TextField
             id="outlined-basic"
-            label="Enter your search here"
+            label="Search Artifind"
             variant="outlined"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Button variant="contained" onClick={handleSearch}>
-            Search
+          <Box
+            component="img"
+            sx={{
+            height: 20,
+            alignSelf: 'center', 
+            }}
+            alt="Search"
+            src={SearchIcon}
+        />
           </Button>
         </Box>
         <div className="DaysBack">
-          <label>Days back to search:</label>
+          <label>Days back to search: </label>
           <input
             type="number"
             value={daysBack}

@@ -69,7 +69,7 @@ def __get_searches(searches: dir):
     print(searches)
     for search in searches:
         news: list[ArticleParser] = searcher.get_news(search.term, search.days)
-        search_data[search.term] = [n.to_search_dict() for n in news]
+        search_data[search.term] = [n.to_home_dict() for n in news]
     return search_data    
 
 @app.get("/home/summary")

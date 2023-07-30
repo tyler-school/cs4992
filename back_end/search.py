@@ -49,7 +49,7 @@ class SearchEngine:
         url = self._generate_search_url(search_term=search_term,
                                         days=days)
         
-        print(f"url: {url}")
+        print(f"Getting news with url: {url}")
         try:
             response = requests.get(url)
         except ConnectionError as e:

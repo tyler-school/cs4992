@@ -2,6 +2,7 @@ from xml.etree.ElementTree import fromstring, Element
 from typing import List
 import pandas as pd
 from bs4 import BeautifulSoup
+from pydantic import BaseModel
 import requests
 from textblob import TextBlob
 from summarize import Summarizer
@@ -106,7 +107,8 @@ class ArticleParser:
             'title': self.title,
             'source': self.source,
             'date': self.pub_date,
-            'link': self.link
+            'link': self.link,
+            'description': self.description
         }
         
     def text_description(self) -> str:

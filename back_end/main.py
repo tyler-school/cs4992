@@ -12,13 +12,34 @@ from json import loads, dumps
 
 app = FastAPI()
 
-class Search(BaseModel):
-    term: str
-    days: int
+class Article(BaseModel):
+    title: str
+    source: str
+    date: str
+    link: str
+    description: str
+
+    # def __init__(self, d: dict):
+    #     self.title = d['title']
+    #     self.source = d['source']
+    #     self.date = d['date']
+    #     self.link = d['link']
+    #     self.description = d['description']
+
+class Widget(BaseModel):
+    searchTerm: str
+    numberOfDays: int
+    articles: list[Article]
+
 class HomePage(BaseModel):
-    username: str
-    searches: list[Search]
-        
+    widgets: list[Widget]
+
+class SearchRequest(BaseModel):
+    searchTerm: str
+    numberOfDays: int
+class HomePageRequest(BaseModel):
+    searches: list[SearchRequest]
+
 
 @app.get("/")
 def read_root():
@@ -35,15 +56,45 @@ def read_search(term: str, days: int, max_results: int=15):
     return result
 
 @app.post("/home/{username}")
-def make_home_page(username: str, item: HomePage):
+def make_home_page(username: str, item: HomePageRequest, max_results=3):
 
-    # Create a new file
-    home_page_file = open(f"home_pages/{username}_home_page.json", 'x')
+        # Try to create a new file for the home page
+    try:
+        home_page_file = open(f"home_pages/{username}_home_page.json", 'x')
+    except FileExistsError as e:
+        return get_home_page(username)
+
+    home_request: dict = item.model_dump()
+    article_results: list[Article] = [] # title, source, date, link, description
+    widgets: list[Widget] = []
+    for request in home_request["searches"]:
+        # request = searchTerm, numberOfDays
+        searcher = SearchEngine(max_results=max_results)
+        results: list[ArticleParser] = searcher.get_news(request["searchTerm"], request["numberOfDays"])
+        simple_results: list[dict] = (r.to_home_dict() for r in results)
+
+        for d in simple_results:
+            article_results.append(Article(
+                title=d['title'],
+                source=d['source'],
+                date=d['date'],
+                link=d['link'],
+                description=d['description']))
+        
+        widgets.append(Widget(searchTerm=request["searchTerm"],
+                              numberOfDays=request["numberOfDays"],
+                              articles=article_results))
+    
+    # Create the HomePage object
+    home_page = HomePage(widgets=widgets)
+    # String representation of the HomePage object
+    dump_str = dumps(home_page.model_dump())
+
 
     # Write homePage info to article
-    home_page_file.write(dumps(item.model_dump()))
+    home_page_file.write(dump_str)
 
-    return item
+    return home_page
 
 @app.get("/home/{username}")
 def get_home_page(username: str):
@@ -54,14 +105,12 @@ def get_home_page(username: str):
     try:
         with open(f"home_pages/{username}_home_page.json") as file:
             data = load(file)
-            user_data = HomePage(**data) 
+            user_data = HomePage(**data)
 
-            if user_data.username == username: 
-                return user_data.searches
-            else:
-                raise HTTPException(status_code=404, detail=f"User '{username}' not found")
+            return user_data
+
     except FileNotFoundError:
-        raise HTTPException(status_code=500, detail=f"File not found, try POST /home/{username}")
+        raise HTTPException(status_code=404, detail=f"File not found, try POST /home/{username}")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
 

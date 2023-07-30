@@ -1,11 +1,10 @@
-from xml.etree.ElementTree import ElementTree, fromstring
+from xml.etree.ElementTree import fromstring, Element
 from typing import List
-import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
+from pydantic import BaseModel
 import requests
 from textblob import TextBlob
-from bias import BiasDetector
 from summarize import Summarizer
 from scraping.scrape import Scraper
 
@@ -20,32 +19,38 @@ class ArticleParser:
 <source url="https://www.bbc.co.uk">BBC</source>
     """
 
-    def __init__(self, item):
-        self.item = item
-
-    def __find(self, tag):
-        return self.item.find(tag).text
+    def __init__(self, item: dict | Element):
+        if isinstance(item, dict):
+            self.item = item
+        elif isinstance(item, Element):
+            self.item = {'title': self.__find(item, 'title'),
+                         'link': self.__find(item, 'link'),
+                         'description': self.__find(item, 'description'),
+                         'pub_date': self.__find(item, 'pubDate'),
+                         'source': self.__find(item, 'source')}
+            
+    def __find(self, xml, tag):
+        return xml.find(tag).text
 
     @property
     def title(self):
-        return self.__find('title')
+        return self.item['title']
 
     @property
     def link(self):
-        return self.__find('link')
+        return self.item['link']
 
     @property
     def description(self):
-        description = self.__find('description')
-        return Scraper().get_desc_text(description)
+        return self.item['description']
 
     @property
     def pub_date(self):
-        return pd.to_datetime(self.__find('pubDate'))
+        return pd.to_datetime(self.item['pub_date'])
 
     @property
     def source(self):
-        return self.__find('source')
+        return self.item['source']
     
     @property
     def body_text(self):
@@ -102,9 +107,13 @@ class ArticleParser:
         return {
             'title': self.title,
             'source': self.source,
-            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
-            'link': self.link
+            'date': self.pub_date,
+            'link': self.link,
+            'description': self.description
         }
+        
+    def text_description(self) -> str:
+        return Scraper().get_desc_text(self.description)
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """

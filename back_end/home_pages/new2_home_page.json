@@ -1,0 +1,79 @@
+{
+    "widgets": [
+        {
+            "searchTerm": "example search",
+            "numberOfDays": 7,
+            "articles": [
+                {
+                    "title": "Google Search is making it easier to find relevant information on women\u2019s sports - TechCrunch",
+                    "source": "TechCrunch",
+                    "date": "2023-07-25 17:23:32+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiWWh0dHBzOi8vdGVjaGNydW5jaC5jb20vMjAyMy8wNy8yNS9nb29nbGUtbWFraW5nLWVhc2llci1maW5kLXNlYXJjaC1yZXN1bHRzLXdvbWVucy1zcG9ydHMv0gFdaHR0cHM6Ly90ZWNoY3J1bmNoLmNvbS8yMDIzLzA3LzI1L2dvb2dsZS1tYWtpbmctZWFzaWVyLWZpbmQtc2VhcmNoLXJlc3VsdHMtd29tZW5zLXNwb3J0cy9hbXAv?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiWWh0dHBzOi8vdGVjaGNydW5jaC5jb20vMjAyMy8wNy8yNS9nb29nbGUtbWFraW5nLWVhc2llci1maW5kLXNlYXJjaC1yZXN1bHRzLXdvbWVucy1zcG9ydHMv0gFdaHR0cHM6Ly90ZWNoY3J1bmNoLmNvbS8yMDIzLzA3LzI1L2dvb2dsZS1tYWtpbmctZWFzaWVyLWZpbmQtc2VhcmNoLXJlc3VsdHMtd29tZW5zLXNwb3J0cy9hbXAv?oc=5\" target=\"_blank\">Google Search is making it easier to find relevant information on women\u2019s sports</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">TechCrunch</font>"
+                },
+                {
+                    "title": "An Essential Guide To SaaS Link Building (+Examples) - Search Engine Journal",
+                    "source": "Search Engine Journal",
+                    "date": "2023-07-24 09:00:24+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiR2h0dHBzOi8vd3d3LnNlYXJjaGVuZ2luZWpvdXJuYWwuY29tL3NhYXMtbGluay1idWlsZGluZy1leGFtcGxlcy80ODg5MjIv0gEA?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiR2h0dHBzOi8vd3d3LnNlYXJjaGVuZ2luZWpvdXJuYWwuY29tL3NhYXMtbGluay1idWlsZGluZy1leGFtcGxlcy80ODg5MjIv0gEA?oc=5\" target=\"_blank\">An Essential Guide To SaaS Link Building (+Examples)</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Search Engine Journal</font>"
+                },
+                {
+                    "title": "Google Search rolls out site name updates and workarounds - Search Engine Land",
+                    "source": "Search Engine Land",
+                    "date": "2023-07-28 12:16:00+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiXWh0dHBzOi8vc2VhcmNoZW5naW5lbGFuZC5jb20vZ29vZ2xlLXNlYXJjaC1yb2xscy1vdXQtc2l0ZS1uYW1lLXVwZGF0ZXMtYW5kLXdvcmthcm91bmRzLTQyOTk3OdIBAA?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiXWh0dHBzOi8vc2VhcmNoZW5naW5lbGFuZC5jb20vZ29vZ2xlLXNlYXJjaC1yb2xscy1vdXQtc2l0ZS1uYW1lLXVwZGF0ZXMtYW5kLXdvcmthcm91bmRzLTQyOTk3OdIBAA?oc=5\" target=\"_blank\">Google Search rolls out site name updates and workarounds</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Search Engine Land</font>"
+                }
+            ]
+        },
+        {
+            "searchTerm": "example search 2",
+            "numberOfDays": 4,
+            "articles": [
+                {
+                    "title": "Google Search is making it easier to find relevant information on women\u2019s sports - TechCrunch",
+                    "source": "TechCrunch",
+                    "date": "2023-07-25 17:23:32+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiWWh0dHBzOi8vdGVjaGNydW5jaC5jb20vMjAyMy8wNy8yNS9nb29nbGUtbWFraW5nLWVhc2llci1maW5kLXNlYXJjaC1yZXN1bHRzLXdvbWVucy1zcG9ydHMv0gFdaHR0cHM6Ly90ZWNoY3J1bmNoLmNvbS8yMDIzLzA3LzI1L2dvb2dsZS1tYWtpbmctZWFzaWVyLWZpbmQtc2VhcmNoLXJlc3VsdHMtd29tZW5zLXNwb3J0cy9hbXAv?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiWWh0dHBzOi8vdGVjaGNydW5jaC5jb20vMjAyMy8wNy8yNS9nb29nbGUtbWFraW5nLWVhc2llci1maW5kLXNlYXJjaC1yZXN1bHRzLXdvbWVucy1zcG9ydHMv0gFdaHR0cHM6Ly90ZWNoY3J1bmNoLmNvbS8yMDIzLzA3LzI1L2dvb2dsZS1tYWtpbmctZWFzaWVyLWZpbmQtc2VhcmNoLXJlc3VsdHMtd29tZW5zLXNwb3J0cy9hbXAv?oc=5\" target=\"_blank\">Google Search is making it easier to find relevant information on women\u2019s sports</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">TechCrunch</font>"
+                },
+                {
+                    "title": "An Essential Guide To SaaS Link Building (+Examples) - Search Engine Journal",
+                    "source": "Search Engine Journal",
+                    "date": "2023-07-24 09:00:24+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiR2h0dHBzOi8vd3d3LnNlYXJjaGVuZ2luZWpvdXJuYWwuY29tL3NhYXMtbGluay1idWlsZGluZy1leGFtcGxlcy80ODg5MjIv0gEA?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiR2h0dHBzOi8vd3d3LnNlYXJjaGVuZ2luZWpvdXJuYWwuY29tL3NhYXMtbGluay1idWlsZGluZy1leGFtcGxlcy80ODg5MjIv0gEA?oc=5\" target=\"_blank\">An Essential Guide To SaaS Link Building (+Examples)</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Search Engine Journal</font>"
+                },
+                {
+                    "title": "Google Search rolls out site name updates and workarounds - Search Engine Land",
+                    "source": "Search Engine Land",
+                    "date": "2023-07-28 12:16:00+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiXWh0dHBzOi8vc2VhcmNoZW5naW5lbGFuZC5jb20vZ29vZ2xlLXNlYXJjaC1yb2xscy1vdXQtc2l0ZS1uYW1lLXVwZGF0ZXMtYW5kLXdvcmthcm91bmRzLTQyOTk3OdIBAA?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiXWh0dHBzOi8vc2VhcmNoZW5naW5lbGFuZC5jb20vZ29vZ2xlLXNlYXJjaC1yb2xscy1vdXQtc2l0ZS1uYW1lLXVwZGF0ZXMtYW5kLXdvcmthcm91bmRzLTQyOTk3OdIBAA?oc=5\" target=\"_blank\">Google Search rolls out site name updates and workarounds</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">Search Engine Land</font>"
+                },
+                {
+                    "title": "Cyclops Emerges From Stealth With Security Search Platform Powered by Generative AI - SecurityWeek",
+                    "source": "SecurityWeek",
+                    "date": "2023-07-26 14:37:52+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMicWh0dHBzOi8vd3d3LnNlY3VyaXR5d2Vlay5jb20vY3ljbG9wcy1lbWVyZ2VzLWZyb20tc3RlYWx0aC13aXRoLXNlY3VyaXR5LXNlYXJjaC1wbGF0Zm9ybS1wb3dlcmVkLWJ5LWdlbmVyYXRpdmUtYWkv0gF1aHR0cHM6Ly93d3cuc2VjdXJpdHl3ZWVrLmNvbS9jeWNsb3BzLWVtZXJnZXMtZnJvbS1zdGVhbHRoLXdpdGgtc2VjdXJpdHktc2VhcmNoLXBsYXRmb3JtLXBvd2VyZWQtYnktZ2VuZXJhdGl2ZS1haS9hbXAv?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMicWh0dHBzOi8vd3d3LnNlY3VyaXR5d2Vlay5jb20vY3ljbG9wcy1lbWVyZ2VzLWZyb20tc3RlYWx0aC13aXRoLXNlY3VyaXR5LXNlYXJjaC1wbGF0Zm9ybS1wb3dlcmVkLWJ5LWdlbmVyYXRpdmUtYWkv0gF1aHR0cHM6Ly93d3cuc2VjdXJpdHl3ZWVrLmNvbS9jeWNsb3BzLWVtZXJnZXMtZnJvbS1zdGVhbHRoLXdpdGgtc2VjdXJpdHktc2VhcmNoLXBsYXRmb3JtLXBvd2VyZWQtYnktZ2VuZXJhdGl2ZS1haS9hbXAv?oc=5\" target=\"_blank\">Cyclops Emerges From Stealth With Security Search Platform Powered by Generative AI</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">SecurityWeek</font>"
+                },
+                {
+                    "title": "Forensic Genetic Genealogy Searches: What Defense Attorneys ... - EFF",
+                    "source": "EFF",
+                    "date": "2023-07-26 16:07:16+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiW2h0dHBzOi8vd3d3LmVmZi5vcmcvd3AvZm9yZW5zaWMtZ2VuZXRpYy1nZW5lYWxvZ3ktc2VhcmNoZXMtd2hhdC1kZWZlbnNlLWF0dG9ybmV5cy1uZWVkLWtub3fSAQA?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiW2h0dHBzOi8vd3d3LmVmZi5vcmcvd3AvZm9yZW5zaWMtZ2VuZXRpYy1nZW5lYWxvZ3ktc2VhcmNoZXMtd2hhdC1kZWZlbnNlLWF0dG9ybmV5cy1uZWVkLWtub3fSAQA?oc=5\" target=\"_blank\">Forensic Genetic Genealogy Searches: What Defense Attorneys ...</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">EFF</font>"
+                },
+                {
+                    "title": "How to Create an Excel Left Lookup Formula Using VLOOKUP - The Tech Edvocate",
+                    "source": "The Tech Edvocate",
+                    "date": "2023-07-27 17:26:42+00:00",
+                    "link": "https://news.google.com/rss/articles/CBMiWWh0dHBzOi8vd3d3LnRoZXRlY2hlZHZvY2F0ZS5vcmcvaG93LXRvLWNyZWF0ZS1hbi1leGNlbC1sZWZ0LWxvb2t1cC1mb3JtdWxhLXVzaW5nLXZsb29rdXAv0gEA?oc=5",
+                    "description": "<a href=\"https://news.google.com/rss/articles/CBMiWWh0dHBzOi8vd3d3LnRoZXRlY2hlZHZvY2F0ZS5vcmcvaG93LXRvLWNyZWF0ZS1hbi1leGNlbC1sZWZ0LWxvb2t1cC1mb3JtdWxhLXVzaW5nLXZsb29rdXAv0gEA?oc=5\" target=\"_blank\">How to Create an Excel Left Lookup Formula Using VLOOKUP</a>&nbsp;&nbsp;<font color=\"#6f6f6f\">The Tech Edvocate</font>"
+                }
+            ]
+        }
+    ]
+}

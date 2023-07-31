@@ -1,4 +1,6 @@
+
 import pandas as pd
+import re
 from textblob import TextBlob
 from nltk.corpus import stopwords 
 
@@ -22,7 +24,8 @@ class BiasDetector:
         Processes the given source into uppercase tokens and returns the set with
         stop words removed using set difference operation.
         """
-        text_blob = TextBlob(source.upper())
+        source_without_numbers = re.sub(r'\d+', '', source)
+        text_blob = TextBlob(source_without_numbers.upper())
         tokens = set(text_blob.words)
         return tokens - self.stop
 

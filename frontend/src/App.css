@@ -1,9 +1,11 @@
+/* src/App.css */
 .App {
+  text-align: center;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
+  align-items: center;
 }
 
 h1 {
@@ -11,16 +13,30 @@ h1 {
   margin-bottom: 20px;
 }
 
-.SearchBar {
+.SearchHeading {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.SearchContainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-input[type="text"] {
+.SearchBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"] {
   padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
+  border-radius: 5px;
+  margin-right: 5px; /* Add some spacing between input fields */
 }
 
 button {
@@ -29,6 +45,6 @@ button {
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 0 5px 5px 0;
+  border-radius: 5px;
   cursor: pointer;
 }

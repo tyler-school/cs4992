@@ -1,13 +1,11 @@
 from fastapi import FastAPI
-from datetime import datetime, timedelta
-from typing import List
-from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
 from json import load, dumps, loads
 from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
+from fastapi.middleware.cors import CORSMiddleware
 import os
 
 app = FastAPI()
@@ -46,16 +44,14 @@ def read_root():
     return {"message": "Root API call"}
 
 @app.get("/search/{term}/{days}")
-def read_search(term: str, days: int, max_results: int=15):
+def read_search(term: str, days: int, max_results: int=25):
     searcher = SearchEngine(max_results=max_results)
     news: list[ArticleParser] = searcher.get_news(term, days)
-
     result: list[dict] = [n.to_search_dict() for n in news]
-    #print(result[0])
     return result
 
 @app.post("/home/{username}")
-def make_home_page(username: str, item: HomePageRequest, max_results=3):
+def make_home_page(username: str, item: HomePageRequest, max_results=25):
 
         # Try to create a new file for the home page
     try:
@@ -121,16 +117,57 @@ def get_summary(item: dict):
     return article.summary()
 
 @app.patch("/home/{username}")
-def patch_home_page(username: str, item: HomePage):
-
+def patch_home_page(username: str, item: SearchRequest, max_results=3):
     try:
         home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
-        page_obj = loads(home_page_file.read())
+    except FileExistsError as e:
+        return get_home_page(username)
 
-        (item.searches).append(page_obj["searches"])
-        home_page_file.write(dumps(item.model_dump()))
-        raise HTTPException(status_code=200, detail="File Successfully Updated")
-    except FileNotFoundError:
-        raise HTTPException(status_code=500, detail="File not found")
-    except ValidationError as ve:
-        raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+    home_request: dict = item.model_dump()
+    article_results: list[Article] = [] # title, source, date, link, description
+    widgets: list[Widget] = []
+    for request in home_request["searches"]:
+        # request = searchTerm, numberOfDays
+        searcher = SearchEngine(max_results=max_results)
+        results: list[ArticleParser] = searcher.get_news(request["searchTerm"], request["numberOfDays"])
+        simple_results: list[dict] = (r.to_home_dict() for r in results)
+
+        for d in simple_results:
+            article_results.append(Article(
+                title=d['title'],
+                source=d['source'],
+                date=d['date'],
+                link=d['link'],
+                description=d['description']))
+        
+        widgets.append(Widget(searchTerm=request["searchTerm"],
+                              numberOfDays=request["numberOfDays"],
+                              articles=article_results))
+    
+
+    widgetList = loads(home_page_file.read())["widgets"]
+    widgetList.append(widgets)
+
+    # Create the HomePage object
+    home_page = HomePage(widgets=widgetList)
+    # String representation of the HomePage object
+    dump_str = dumps(home_page.model_dump())
+
+    # Write homePage info to article
+    home_page_file.write(dump_str)
+
+    return home_page
+
+
+# Set Up CORS white list
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

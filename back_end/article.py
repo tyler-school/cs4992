@@ -1,15 +1,13 @@
-from xml.etree.ElementTree import fromstring, Element
+from xml.etree.ElementTree import fromstring
 from typing import List
 import pandas as pd
 from bs4 import BeautifulSoup
-from pydantic import BaseModel
 import requests
 from textblob import TextBlob
-from summarize import Summarizer
-from scraping.scrape import Scraper
 from bias import BiasDetector
-from typing import Union
-import threading
+from summarize import Summarizer
+
+from scraping.scrape import Scraper
 
 class ArticleParser:
     """
@@ -22,55 +20,52 @@ class ArticleParser:
 <source url="https://www.bbc.co.uk">BBC</source>
     """
 
-    def __init__(self, item: Union[dict, Element]):
-        if isinstance(item, dict):
-            self.item = item
-        elif isinstance(item, Element):
-            self.item = {'title': self.__find(item, 'title'),
-                         'link': self.__find(item, 'link'),
-                         'description': self.__find(item, 'description'),
-                         'pub_date': self.__find(item, 'pubDate'),
-                         'source': self.__find(item, 'source')}
-            
-    def __find(self, xml, tag):
-        return xml.find(tag).text
+    def __init__(self, item):
+        self.item = item
+        self.dict = {}
+
+    def __find(self, tag):
+        return self.item.find(tag).text
+
+    @property
+    def body_text(self):
+        if 'body_text' not in self.dict:
+            self.dict['body_text'] = self._compute_body_text()
+        return self.dict['body_text']
 
     @property
     def title(self):
-        return self.item['title']
+        return self.__find('title')
 
     @property
     def link(self):
-        return self.item['link']
+        return self.__find('link')
 
     @property
     def description(self):
-        return self.item['description']
+        description = self.__find('description')
+        return description
 
     @property
     def pub_date(self):
-        return pd.to_datetime(self.item['pub_date'])
+        return pd.to_datetime(self.__find('pubDate'))
 
     @property
     def source(self):
-        return self.item['source']
+        return self.__find('source')
     
-    @property
-    def body_text(self):
-        html_text = requests.get(self.link, allow_redirects=True)
-        html_text = requests.get(html_text.url, allow_redirects=True)
+    def _compute_body_text(self):
+        response = requests.head(self.link, allow_redirects=True)
+        while 'Location' in response.headers:
+            new_url = response.headers['Location']
+            response = requests.head(new_url, allow_redirects=True)
+        final_url = response.url
+        html_text = requests.get(final_url, allow_redirects=True)
 
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
-        filtered_list = []
-
-        # filtering out list elements with less than 2 words
-        for l in lists:
-            if l.text.count(" ") > 2:
-                filtered_list.append(l)
-
-        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in filtered_list])
+        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
 
     @property
     def sentiment(self):
@@ -80,14 +75,17 @@ class ArticleParser:
         of the form Sentiment(polarity, subjectivity). 
         """
         text_blob_object = TextBlob(self.body_text) 
-        return text_blob_object.sentiment
+        sentiment = text_blob_object.sentiment
+        return sentiment
     
     @property
     def bias(self):
         """Returns the political bias of the article's source"""
-        bias = BiasDetector()
-        return bias.find_bias(self.source)
+        bias_detector = BiasDetector()
+        bias = bias_detector.find_bias(self.source)
+        return bias
 
+    @property
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
         summarizer = Summarizer()
@@ -95,26 +93,26 @@ class ArticleParser:
 
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
-        return {
+        dict = {
             'title': self.title,
             'link': self.link,
-            'description': self.text_description(),
-            'date': self.pub_date,
+            'description': self.description,
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'source': self.source,
             'sentiment': self.sentiment,
             'bias': self.bias
         }
-    
+        return dict
+
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
         return {
             'title': self.title,
             'source': self.source,
-            'date': self.pub_date,
-            'link': self.link,
-            'description': self.description
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
+            'link': self.link
         }
-        
+
     def text_description(self) -> str:
         return Scraper().get_desc_text(self.description)
 
@@ -125,41 +123,9 @@ def parse_news_items(not_response) -> List[ArticleParser]:
     if not_response.status_code != 200:
         raise Exception('Failed to fetch news items.')
     root = fromstring(not_response.text)
-
     news_items = []
-    xml_items = []
-
     for item in root.findall('.//channel/item'):
-        xml_items.append(item)
-
-    def parse_list_portion(list):
-        for item in list:
-            article = ArticleParser(item)
-            news_items.append(article)
-
-    delegationList = [[], [], [], [], []]
-
-    for x in range(len(xml_items)):
-        delegationList[x%5].append(xml_items[x])
-
-    t1 = threading.Thread(target=parse_list_portion, args=(delegationList[0],))
-    t2 = threading.Thread(target=parse_list_portion, args=(delegationList[1],))
-    t3 = threading.Thread(target=parse_list_portion, args=(delegationList[2],))
-    t4 = threading.Thread(target=parse_list_portion, args=(delegationList[3],))
-    t5 = threading.Thread(target=parse_list_portion, args=(delegationList[4],))
- 
-    # starting thread 1
-    t1.start()
-    t2.start()
-    t3.start()
-    t4.start()
-    t5.start()
- 
-    # wait until thread 1 is completely executed
-    t1.join()
-    t2.join()
-    t3.join()
-    t4.join()
-    t5.join()
-
+        article = ArticleParser(item)
+        news_items.append(article)
     return news_items
+

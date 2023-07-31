@@ -82,9 +82,7 @@ class ArticleParser:
     def bias(self):
         """Returns the political bias of the article's source"""
         bias_detector = BiasDetector()
-        print(self.source)
         bias = bias_detector.find_bias(self.source)
-        print(bias)
         return bias
     
     @property

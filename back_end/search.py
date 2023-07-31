@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import requests
 import json
 import pandas as pd
@@ -61,6 +62,19 @@ class SearchEngine:
         #print([a.text_description() for a in news_items])
         news_items = news_items[:self.max_results]
         return news_items
+    
+    def get_body_text_from_link(self, link_url):
+        response = requests.head(link_url, allow_redirects=True)
+        while 'Location' in response.headers:
+            new_url = response.headers['Location']
+            response = requests.head(new_url, allow_redirects=True)
+        final_url = response.url
+        html_text = requests.get(final_url, allow_redirects=True)
+
+        soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
+        body = soup.find_all('p')
+        lists = soup.find_all('li')
+        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
 
 if __name__ == '__main__':
     start_time = time.time()

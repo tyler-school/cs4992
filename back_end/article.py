@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import requests
 from textblob import TextBlob
 from bias import BiasDetector
-from summarize import Summarizer
 
 from scraping.scrape import Scraper
 
@@ -84,12 +83,6 @@ class ArticleParser:
         bias_detector = BiasDetector()
         bias = bias_detector.find_bias(self.source)
         return bias
-
-    @property
-    def summary(self):
-        # need to physically paste in the key for demo into summarize.py
-        summarizer = Summarizer()
-        return summarizer.summarize(self.body_text)
 
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""

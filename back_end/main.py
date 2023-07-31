@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
 from fastapi.middleware.cors import CORSMiddleware
+from summarize import Summarizer
 import os
 
 app = FastAPI()
@@ -119,6 +120,10 @@ def get_summary(item: dict):
                       date=item['date'],
                       link=item['link'])
     
+    body_text = SearchEngine().get_body_text_from_link(article.link)
+    return Summarizer().summarize(body_text)
+    
+
     
 
 @app.patch("/home/{username}")

@@ -1,7 +1,4 @@
 from fastapi import FastAPI
-from datetime import datetime, timedelta
-from typing import List
-from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
 from json import load, dumps, loads
@@ -24,13 +21,16 @@ def read_root():
     return {"message": "Root API call"}
 
 @app.get("/search/{term}/{days}")
-def read_search(term: str, days: int, max_results: int=15):
+def read_search(term: str, days: int, max_results: int=25):
     searcher = SearchEngine(max_results=max_results)
     news: list[ArticleParser] = searcher.get_news(term, days)
 
-    result: list[dict] = [n.to_search_dict() for n in news]
+    result: list[dict] = []
+    for n in news:
+        article_dict = n.to_search_dict() 
+        result.append(article_dict)
 
-    return dumps(result)
+    return result
 
 @app.post("/home/{username}")
 def make_home_page(username: str, item: HomePage):
@@ -64,7 +64,7 @@ def get_home_page(username: str):
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
         
 def __get_searches(searches: dir): 
-    searcher = SearchEngine(max_results=2) 
+    searcher = SearchEngine(max_results=25) 
     search_data = {}
     print(searches)
     for search in searches:

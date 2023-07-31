@@ -1,6 +1,5 @@
-from xml.etree.ElementTree import ElementTree, fromstring
+from xml.etree.ElementTree import fromstring
 from typing import List
-import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
@@ -22,9 +21,16 @@ class ArticleParser:
 
     def __init__(self, item):
         self.item = item
+        self.dict = {}
 
     def __find(self, tag):
         return self.item.find(tag).text
+    
+    @property
+    def body_text(self):
+        if 'body_text' not in self.dict:
+            self.dict['body_text'] = self._compute_body_text()
+        return self.dict['body_text']
 
     @property
     def title(self):
@@ -47,22 +53,18 @@ class ArticleParser:
     def source(self):
         return self.__find('source')
     
-    @property
-    def body_text(self):
-        html_text = requests.get(self.link, allow_redirects=True) 
-        html_text = requests.get(html_text.url, allow_redirects=True) 
-        
+    def _compute_body_text(self):
+        response = requests.head(self.link, allow_redirects=True)
+        while 'Location' in response.headers:
+            new_url = response.headers['Location']
+            response = requests.head(new_url, allow_redirects=True)
+        final_url = response.url
+        html_text = requests.get(final_url, allow_redirects=True) 
+
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
-        filtered_list = []
-
-        # filtering out list elements with less than 2 words
-        for l in lists:
-            if l.text.count(" ") > 2:
-                filtered_list.append(l)
-
-        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in filtered_list])
+        return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
    
     @property
     def sentiment(self):
@@ -72,13 +74,17 @@ class ArticleParser:
         of the form Sentiment(polarity, subjectivity). 
         """
         text_blob_object = TextBlob(self.body_text) 
-        return text_blob_object.sentiment
+        sentiment = text_blob_object.sentiment
+        return sentiment
     
     @property
     def bias(self):
         """Returns the political bias of the article's source"""
-        bias = BiasDetector()
-        return bias.find_bias(self.source)
+        bias_detector = BiasDetector()
+        print(self.source)
+        bias = bias_detector.find_bias(self.source)
+        print(bias)
+        return bias
     
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
@@ -87,15 +93,16 @@ class ArticleParser:
 
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
-        return {
+        dict = {
             'title': self.title,
             'link': self.link,
-            'description': self.text_description(),
-            'date': self.pub_date,
+            'description': self.description,
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'source': self.source,
             'sentiment': self.sentiment, 
             'bias': self.bias
         }
+        return dict 
     
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
@@ -104,7 +111,7 @@ class ArticleParser:
             'source': self.source,
             'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'link': self.link
-        }
+        } 
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """
@@ -118,3 +125,4 @@ def parse_news_items(not_response) -> List[ArticleParser]:
         article = ArticleParser(item)
         news_items.append(article)
     return news_items
+ 

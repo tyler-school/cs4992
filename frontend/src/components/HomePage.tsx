@@ -219,7 +219,16 @@ const HomePage: React.FC = () => {
       </Tooltip>
 
       <Tooltip title="Edit the widgets on your home page" arrow placement='top-start' sx={{fontSize: "20px"}}>
-          <Fab color="secondary" variant="extended" href='/edit' sx={{position: "fixed", bottom: "3%", right: "3%"}}>
+          <Fab variant="extended" href='/edit' 
+          sx={{position: "fixed", 
+          bottom: "3%", 
+          right: "3%", 
+          backgroundColor: "#f15025",
+          color: "white",
+        '&:hover': {
+          backgroundColor: "#191919",
+        }
+          }}>
             <EditIcon sx={{mr: 1}} />
             Edit
           </Fab>

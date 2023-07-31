@@ -1,14 +1,14 @@
-from xml.etree.ElementTree import fromstring, Element
+from xml.etree.ElementTree import ElementTree, fromstring
 from typing import List
+import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
-from pydantic import BaseModel
 import requests
 from textblob import TextBlob
-from summarize import Summarizer
-from scraping.scrape import Scraper
 from bias import BiasDetector
-import threading
+from summarize import Summarizer
+
+from scraping.scrape import Scraper
 
 class ArticleParser:
     """
@@ -21,45 +21,37 @@ class ArticleParser:
 <source url="https://www.bbc.co.uk">BBC</source>
     """
 
-    def __init__(self, item: dict | Element):
-        if isinstance(item, dict):
-            self.item = item
-        elif isinstance(item, Element):
-            self.item = {'title': self.__find(item, 'title'),
-                         'link': self.__find(item, 'link'),
-                         'description': self.__find(item, 'description'),
-                         'pub_date': self.__find(item, 'pubDate'),
-                         'source': self.__find(item, 'source')}
-            
-    def __find(self, xml, tag):
-        return xml.find(tag).text
+    def __init__(self, item):
+        self.item = item
+
+    def __find(self, tag):
+        return self.item.find(tag).text
 
     @property
     def title(self):
-        return self.item['title']
+        return self.__find('title')
 
     @property
     def link(self):
-        return self.item['link']
+        return self.__find('link')
 
     @property
     def description(self):
-        return self.item['description']
+        description = self.__find('description')
+        return description
 
     @property
     def pub_date(self):
-        return pd.to_datetime(self.item['pub_date'])
+        return pd.to_datetime(self.__find('pubDate'))
 
     @property
     def source(self):
-        return self.item['source']
+        return self.__find('source')
     
     @property
     def body_text(self):
-        html_text = requests.get(self.link, allow_redirects=True)
-        html_text = requests.get(html_text.url, allow_redirects=True)
-
-        soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
+        html_text = requests.get(self.link, allow_redirects=True) 
+        soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')
         filtered_list = []
@@ -70,7 +62,7 @@ class ArticleParser:
                 filtered_list.append(l)
 
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in filtered_list])
-
+    
     @property
     def sentiment(self):
         """
@@ -86,7 +78,8 @@ class ArticleParser:
         """Returns the political bias of the article's source"""
         bias = BiasDetector()
         return bias.find_bias(self.source)
-
+    
+    @property
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
         summarizer = Summarizer()
@@ -97,8 +90,8 @@ class ArticleParser:
         return {
             'title': self.title,
             'link': self.link,
-            'description': self.text_description(),
-            'date': self.pub_date,
+            'description': self.description,
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'source': self.source,
             'sentiment': self.sentiment,
             'bias': self.bias
@@ -109,11 +102,10 @@ class ArticleParser:
         return {
             'title': self.title,
             'source': self.source,
-            'date': self.pub_date,
-            'link': self.link,
-            'description': self.description
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
+            'link': self.link
         }
-        
+
     def text_description(self) -> str:
         return Scraper().get_desc_text(self.description)
 
@@ -124,32 +116,8 @@ def parse_news_items(not_response) -> List[ArticleParser]:
     if not_response.status_code != 200:
         raise Exception('Failed to fetch news items.')
     root = fromstring(not_response.text)
-
     news_items = []
-    xml_items = root.findall('.//channel/item')
-
-    def parse_list_portion(list):
-        for item in list:
-            article = ArticleParser(item)
-            news_items.append(article)
-
-    delegationList = [[], [], []]
-
-    for x in range(len(xml_items)):
-        delegationList[x%3].append(xml_items[x])
-
-    t1 = threading.Thread(target=parse_list_portion, args=(delegationList[0],))
-    t2 = threading.Thread(target=parse_list_portion, args=(delegationList[1],))
-    t3 = threading.Thread(target=parse_list_portion, args=(delegationList[2],))
- 
-    # starting thread 1
-    t1.start()
-    t2.start()
-    t3.start()
- 
-    # wait until thread 1 is completely executed
-    t1.join()
-    t2.join()
-    t3.join()
-
+    for item in root.findall('.//channel/item'):
+        article = ArticleParser(item)
+        news_items.append(article)
     return news_items

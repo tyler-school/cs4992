@@ -77,7 +77,16 @@ class ArticleParser:
         """
         text_blob_object = TextBlob(self.body_text) 
         sentiment = text_blob_object.sentiment
-        return sentiment
+        polarity = self.__convert_scale(sentiment[0])
+        subjectivity = round(sentiment[1] * 100,1)
+        pretty_sentiment = str(polarity) + "/10.0 polarity, " + str(subjectivity) + "% subjective"
+        return pretty_sentiment
+    
+    def __convert_scale(self, old_value):
+        new_value = (old_value - (-1.0)) / 2 * (10 - (-10)) + (-10)
+        rounded_value = round(new_value, 1)
+        return rounded_value
+
     
     @property
     def bias(self):
@@ -88,14 +97,21 @@ class ArticleParser:
 
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        days_difference = abs((self.pub_date - today).days)
+        date_str = self.pub_date.strftime('%Y-%m-%d %H:%M')
+        if days_difference == 1:
+            date_str += " (1 day ago)"
+        else:
+            date_str += f" ({days_difference} days ago)"
         dict = {
             'title': self.title,
             'link': self.link,
-            'description': self.description,
-            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
+            'description': self.text_description(),
+            'date': date_str,
             'source': self.source,
             'sentiment': self.sentiment,
-            'bias': self.bias
+            'bias': self.bias.title()
         }
         return dict
 
@@ -103,10 +119,15 @@ class ArticleParser:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
         today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
         days_difference = abs((self.pub_date - today).days)
+        date_str = self.pub_date.strftime('%Y-%m-%d %H:%M')
+        if days_difference == 1:
+            date_str += " (1 day ago)"
+        else:
+            date_str += f" ({days_difference} days ago)"
         return { 
             'title': self.title,
             'source': self.source,
-            'date': f'{days_difference} days ago',
+            'date': date_str,
             'link': self.link
         } 
 

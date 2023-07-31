@@ -108,7 +108,7 @@ const SearchPage: React.FC = () => {
                   <Typography variant="body1">Date: {result.date}</Typography>
                   <Typography variant="body1">Source: {result.source}</Typography>
                   {/* Add a check for the 'sentiment' field */}
-                  <Typography variant="body1">Sentiment: {result.sentiment ? result.sentiment.join(', ') : 'N/A'}</Typography>
+                  <Typography variant="body1">Sentiment: {result.sentiment}</Typography>
                   <Typography variant="body1">Bias: {result.bias}</Typography>
                 </Grid>
               </Grid>

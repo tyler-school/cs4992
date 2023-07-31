@@ -41,7 +41,7 @@ const EditPage: React.FC = () => {
           />
         </a>
       </div>
-      <h1>Multiple Forms Example</h1>
+      <h1>Edit Home</h1>
       <Grid container spacing={2}>
         {forms.map((form) => (
           <Grid item key={form.id} xs={12} md={6} lg={6}>

@@ -138,3 +138,16 @@ def patch_home_page(username: str, item: SearchRequest, max_results=3):
         raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+
+# White listing port 3000 so front end can make calls
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

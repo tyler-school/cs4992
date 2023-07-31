@@ -113,8 +113,13 @@ def get_home_page(username: str):
 def get_summary(item: dict):
     # item: ArticleParser = ArticleParser(item)
     # item.from_dict()
-    article = ArticleParser(item)
-    return article.summary()
+    article = Article(title=item['title'], 
+                      description=item['description'],
+                      source=item['source'],
+                      date=item['date'],
+                      link=item['link'])
+    
+    
 
 @app.patch("/home/{username}")
 def patch_home_page(username: str, item: SearchRequest, max_results=3):

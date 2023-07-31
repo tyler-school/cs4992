@@ -5,6 +5,7 @@ import time
 import xml.etree.ElementTree as ET
 from enums import RecentPeriod
 from article import ArticleParser, parse_news_items
+from json import dumps
 
 from datetime import datetime, timedelta, date
 from scraping.scrape import Scraper
@@ -44,8 +45,11 @@ class SearchEngine:
         url = self._generate_search_url(search_term=search_term,
                                         days=days)
         
-        print(f"url: {url}")
-        response = requests.get(url)
+        print(f"Getting news with url: {url}")
+        try:
+            response = requests.get(url)
+        except ConnectionError as e:
+            raise ConnectionError("Network error. Check internet connection.")
         news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)
         # right now we can't even get that many articles, so it's not a problem
         # streaming by making a generator (iterator) might be future solution look up (def __enter__ too)
@@ -64,6 +68,7 @@ if __name__ == '__main__':
     # search_term = input('Enter your search term here: ')
     # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
     search_term = 'mercedes vortices'
-    news.get_news(search_term, days=30)
+    news = news.get_news(search_term, days=30)
+    print(news[0].body_text)
     end_time = time.time()
     print(f'Execution time: {end_time - start_time:.2f} seconds')

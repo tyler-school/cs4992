@@ -1,13 +1,12 @@
-from xml.etree.ElementTree import ElementTree, fromstring
+from xml.etree.ElementTree import fromstring, Element
 from typing import List
-import datetime as dt
 import pandas as pd
 from bs4 import BeautifulSoup
+from pydantic import BaseModel
 import requests
 from textblob import TextBlob
-from bias import BiasDetector
 from summarize import Summarizer
-from scraping.scrape import Scraper 
+from scraping.scrape import Scraper
 
 class ArticleParser:
     """
@@ -20,38 +19,44 @@ class ArticleParser:
 <source url="https://www.bbc.co.uk">BBC</source>
     """
 
-    def __init__(self, item):
-        self.item = item
-
-    def __find(self, tag):
-        return self.item.find(tag).text
+    def __init__(self, item: dict | Element):
+        if isinstance(item, dict):
+            self.item = item
+        elif isinstance(item, Element):
+            self.item = {'title': self.__find(item, 'title'),
+                         'link': self.__find(item, 'link'),
+                         'description': self.__find(item, 'description'),
+                         'pub_date': self.__find(item, 'pubDate'),
+                         'source': self.__find(item, 'source')}
+            
+    def __find(self, xml, tag):
+        return xml.find(tag).text
 
     @property
     def title(self):
-        return self.__find('title')
+        return self.item['title']
 
     @property
     def link(self):
-        return self.__find('link')
+        return self.item['link']
 
     @property
     def description(self):
-        description = self.__find('description')
-        return Scraper().get_desc_text(description)
-    
+        return self.item['description']
+
     @property
     def pub_date(self):
-        return pd.to_datetime(self.__find('pubDate'))
+        return pd.to_datetime(self.item['pub_date'])
 
     @property
     def source(self):
-        return self.__find('source')
+        return self.item['source']
     
     @property
     def body_text(self):
-        html_text = requests.get(self.link, allow_redirects=True) 
-        html_text = requests.get(html_text.url, allow_redirects=True) 
-        
+        html_text = requests.get(self.link, allow_redirects=True)
+        html_text = requests.get(html_text.url, allow_redirects=True)
+
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -63,7 +68,7 @@ class ArticleParser:
                 filtered_list.append(l)
 
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in filtered_list])
-   
+
     @property
     def sentiment(self):
         """
@@ -79,7 +84,7 @@ class ArticleParser:
         """Returns the political bias of the article's source"""
         bias = BiasDetector()
         return bias.find_bias(self.source)
-    
+
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
         summarizer = Summarizer()
@@ -93,7 +98,7 @@ class ArticleParser:
             'description': self.text_description(),
             'date': self.pub_date,
             'source': self.source,
-            'sentiment': self.sentiment, 
+            'sentiment': self.sentiment,
             'bias': self.bias
         }
     
@@ -102,9 +107,13 @@ class ArticleParser:
         return {
             'title': self.title,
             'source': self.source,
-            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
-            'link': self.link
+            'date': self.pub_date,
+            'link': self.link,
+            'description': self.description
         }
+        
+    def text_description(self) -> str:
+        return Scraper().get_desc_text(self.description)
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """

@@ -299,6 +299,8 @@ docs/_build/
 
 # PyBuilder
 target/
+# IPython Notebook
+.ipynb_checkpoints
 
 # pyenv
 .python-version
@@ -427,5 +429,6 @@ fabric.properties
 *.vsix
 
 # openai keys
-/back_end/summarizing/secret_keys/*
+#/back_end/summarizing/secret_keys/*
+**/secret_keys
 

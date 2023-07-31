@@ -5,6 +5,7 @@ import time
 import xml.etree.ElementTree as ET
 from enums import RecentPeriod
 from article import ArticleParser, parse_news_items
+from json import dumps
 
 from datetime import datetime, timedelta, date
 from scraping.scrape import Scraper
@@ -21,13 +22,9 @@ class SearchEngine:
         days: int):
         """
         Generates a search URL for the given search term and data filter.
-        If neither start_date nor end_date are passed, no time filter will be applied.
         Args:
             search_term: The term to search for.
-            start_date: The start date for the search.
-            end_date: The end date for the search. Defaults to today if start date is passed.
-            period: A RecentPeriod enum value indicating a period length from before today to
-            filter by.
+            days: The range of dates to search in in the past
         """
         start_string = date.today()
         # truncate at 10 to remove seconds and milliseconds
@@ -35,7 +32,7 @@ class SearchEngine:
 
         time_filter = f'after:{end_string}+before:{start_string}'
         url = (f'https://news.google.com/rss/search?q={search_term}+{time_filter}'
-               f'&hl=en-US&gl=US&ceid=US:en')
+               f'&hl=en-GB&gl=GB&ceid=GB:en')
         return url
 
     def get_news(self,
@@ -48,8 +45,11 @@ class SearchEngine:
         url = self._generate_search_url(search_term=search_term,
                                         days=days)
         
-        print(f"url: {url}")
-        response = requests.get(url)
+        print(f"Getting news with url: {url}")
+        try:
+            response = requests.get(url)
+        except ConnectionError as e:
+            raise ConnectionError("Network error. Check internet connection.")
         news_items = parse_news_items(response) # might be an issue to hold every article as a class object within a list (RAM usage)
         # right now we can't even get that many articles, so it's not a problem
         # streaming by making a generator (iterator) might be future solution look up (def __enter__ too)
@@ -68,6 +68,7 @@ if __name__ == '__main__':
     # search_term = input('Enter your search term here: ')
     # data_filter = int(input('Enter number of days ago or leave blank for all data: ')) or None
     search_term = 'mercedes vortices'
-    news.get_news(search_term, days=30)
+    news = news.get_news(search_term, days=30)
+    print(news[0].body_text)
     end_time = time.time()
     print(f'Execution time: {end_time - start_time:.2f} seconds')

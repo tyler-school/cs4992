@@ -19,7 +19,7 @@ function App() {
         </Routes>
 
         {/* Move this Box to the bottom */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto' }}>
+        {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto' }}>
           <Box width={500} height={100} backgroundColor="lightblue">
              <ul>
                 <li>
@@ -33,7 +33,7 @@ function App() {
                 </li>
               </ul>
           </Box>
-        </div>
+        </div> */}
     
     </Router>
   );

@@ -24,7 +24,7 @@ const HomePage: React.FC = () => {
       <h1>Welcome to My Homepage</h1>
       <ArticleList />
       <div className="SearchBar">
-        <input type="text" placeholder="Enter your search here" />
+        <input type="text" placeholder="Search Artifind" />
         <button>Search</button>
       </div>
     </div>

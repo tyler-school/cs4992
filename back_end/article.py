@@ -6,7 +6,8 @@ import requests
 from textblob import TextBlob
 from bias import BiasDetector
 from summarize import Summarizer
-from scraping.scrape import Scraper 
+
+from scraping.scrape import Scraper
 
 class ArticleParser:
     """
@@ -43,8 +44,8 @@ class ArticleParser:
     @property
     def description(self):
         description = self.__find('description')
-        return Scraper().get_desc_text(description)
-    
+        return description
+
     @property
     def pub_date(self):
         return pd.to_datetime(self.__find('pubDate'))
@@ -86,6 +87,7 @@ class ArticleParser:
         print(bias)
         return bias
     
+    @property
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
         summarizer = Summarizer()
@@ -99,7 +101,7 @@ class ArticleParser:
             'description': self.description,
             'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'source': self.source,
-            'sentiment': self.sentiment, 
+            'sentiment': self.sentiment,
             'bias': self.bias
         }
         return dict 
@@ -112,6 +114,9 @@ class ArticleParser:
             'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'link': self.link
         } 
+
+    def text_description(self) -> str:
+        return Scraper().get_desc_text(self.description)
 
 def parse_news_items(not_response) -> List[ArticleParser]:
     """

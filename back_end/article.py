@@ -8,7 +8,7 @@ from bias import BiasDetector
 from summarize import Summarizer
 from datetime import datetime, timezone
 
-from scraping.scrape import Scraper
+from scrape import Scraper
 
 class ArticleParser:
     """
@@ -107,7 +107,8 @@ class ArticleParser:
             'title': self.title,
             'source': self.source,
             'date': f'{days_difference} days ago',
-            'link': self.link
+            'link': self.link,
+            'description': self.description
         } 
 
     def text_description(self) -> str:

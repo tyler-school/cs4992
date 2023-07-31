@@ -8,6 +8,7 @@ from json import load, dumps, loads
 from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
+from fastapi.middleware.cors import CORSMiddleware
 import os
 
 app = FastAPI()
@@ -134,3 +135,16 @@ def patch_home_page(username: str, item: HomePage):
         raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
+
+# Set Up CORS white list
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

@@ -17,6 +17,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const API_URL = 'https://jsonplaceholder.typicode.com/todos/1'; // Example URL that provides JSON data
+const LOCAL_API_URL = 'http://127.0.0.1:8000/home/temp';
 
 const HomePage: React.FC = () => {
 
@@ -111,7 +112,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       // alert("Original JSON: " + newWidgetsObj.widgets[0].searchTerm)
-      const modifiedWidgets = moveLastToFront(data.widgets)
+      const modifiedWidgets = moveLastToFront(widgetsData!.widgets)
       const modifiedWidgetObj: WidgetsJSON = {
         widgets: modifiedWidgets
       }
@@ -127,27 +128,77 @@ const HomePage: React.FC = () => {
 
   // T1 - Uncomment T1 sections for the practice API call functionality
   // Practice JSON getting
-  const [testJsonString, setTestJsonString] = useState('');
+  // const [testJsonString, setTestJsonString] = useState('');
 
   // TODO: I think I can just use set data from the other use effect I have, and that should set the data nicely
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        setTestJsonString(data.title) // Assuming the JSON has that field
-        console.log("TEST LOG HERE")
-        console.log(data);
-        console.log(newWidgetsObj);
-      }
-      catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
+  // useEffect(() => {
 
-    fetchData();
-  }, []);
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(LOCAL_API_URL);
+
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+
+  //       const dataNameFour: WidgetsJSON = await response.json();
+
+  //       if (!dataNameFour || !dataNameFour.widgets)
+
+
+  //       const data = await response.json();
+  //       setTestJsonString(data.widgets[0].searchTerm) // Assuming the JSON has that field
+  //       console.log("TEST LOG HERE")
+  //       console.log(data);
+  //       console.log(newWidgetsObj);
+  //     }
+  //     catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //     }
+  //   };
+
+  //   fetchData();
+
+  //   // const fetchData = async () => {
+  //   //   try {
+  //   //     const response = await fetch(LOCAL_API_URL);
+  //   //     const data = await response.json();
+  //   //     setTestJsonString(data.widgets[0].searchTerm) // Assuming the JSON has that field
+  //   //     console.log("TEST LOG HERE")
+  //   //     console.log(data);
+  //   //     console.log(newWidgetsObj);
+  //   //   }
+  //   //   catch (error) {
+  //   //     console.error("Error fetching data: ", error);
+  //   //   }
+  //   // };
+
+  //   // fetchData();
+  // }, []);
+
+
+  const [widgetsData, setWidgetsData] = useState<WidgetsJSON | null>(newWidgetsObj);
+
+    useEffect(() => {
+      async function fetchWidgetsData(): Promise<void> {
+
+        try {
+          const response = await fetch(LOCAL_API_URL);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const dataNameFive: WidgetsJSON = await response.json();
+          setWidgetsData(dataNameFive);
+        }
+        catch (error) {
+          console.error("Error fetching widgets data: ", error)
+        }        
+      }
+
+      fetchWidgetsData();
+    }, [])
 
 
   return (
@@ -178,11 +229,11 @@ const HomePage: React.FC = () => {
         width: "75%",
         marginLeft: "12.5%",
         marginRight: "12.5%",
-        marginTop: "5%"
+        marginTop: "5.5%"
       }}>
 
         {
-          data.widgets.map((widget) => {
+          widgetsData?.widgets.map((widget) => {
             return <DisplayWidgetComponent searchTerm={widget.searchTerm} numberOfDays={widget.numberOfDays} articles={widget.articles} />
             // return <h1>{widget.searchTerm}</h1>
           })

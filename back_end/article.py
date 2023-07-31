@@ -8,7 +8,7 @@ from bias import BiasDetector
 from summarize import Summarizer
 from datetime import datetime, timezone
 
-from scraping.scrape import Scraper
+from scrape import Scraper
 
 class ArticleParser:
     """

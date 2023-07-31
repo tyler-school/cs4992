@@ -37,6 +37,7 @@ class HomePage(BaseModel):
 class SearchRequest(BaseModel):
     searchTerm: str
     numberOfDays: int
+
 class HomePageRequest(BaseModel):
     searches: list[SearchRequest]
 
@@ -121,14 +122,14 @@ def get_summary(item: dict):
     return article.summary()
 
 @app.patch("/home/{username}")
-def patch_home_page(username: str, item: HomePage):
-
+def patch_home_page(username: str, item: SearchRequest):
     try:
         home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
         page_obj = loads(home_page_file.read())
+        home_request: dict = item.model_dump()
+        page_obj["searches"].append(home_request["searches"])
+        home_page_file.write(dumps(page_obj))
 
-        (item.searches).append(page_obj["searches"])
-        home_page_file.write(dumps(item.model_dump()))
         raise HTTPException(status_code=200, detail="File Successfully Updated")
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="File not found")

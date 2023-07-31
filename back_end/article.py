@@ -126,39 +126,30 @@ def parse_news_items(not_response) -> List[ArticleParser]:
     root = fromstring(not_response.text)
 
     news_items = []
-    xml_items = []
-
-    for item in root.findall('.//channel/item'):
-        xml_items.append(item)
+    xml_items = root.findall('.//channel/item')
 
     def parse_list_portion(list):
         for item in list:
             article = ArticleParser(item)
             news_items.append(article)
 
-    delegationList = [[], [], [], [], []]
+    delegationList = [[], [], []]
 
     for x in range(len(xml_items)):
-        delegationList[x%5].append(xml_items[x])
+        delegationList[x%3].append(xml_items[x])
 
     t1 = threading.Thread(target=parse_list_portion, args=(delegationList[0],))
     t2 = threading.Thread(target=parse_list_portion, args=(delegationList[1],))
     t3 = threading.Thread(target=parse_list_portion, args=(delegationList[2],))
-    t4 = threading.Thread(target=parse_list_portion, args=(delegationList[3],))
-    t5 = threading.Thread(target=parse_list_portion, args=(delegationList[4],))
  
     # starting thread 1
     t1.start()
     t2.start()
     t3.start()
-    t4.start()
-    t5.start()
  
     # wait until thread 1 is completely executed
     t1.join()
     t2.join()
     t3.join()
-    t4.join()
-    t5.join()
 
     return news_items

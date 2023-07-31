@@ -7,6 +7,8 @@ import requests
 from textblob import TextBlob
 from summarize import Summarizer
 from scraping.scrape import Scraper
+from bias import BiasDetector
+import threading
 
 class ArticleParser:
     """
@@ -122,8 +124,41 @@ def parse_news_items(not_response) -> List[ArticleParser]:
     if not_response.status_code != 200:
         raise Exception('Failed to fetch news items.')
     root = fromstring(not_response.text)
+
     news_items = []
+    xml_items = []
+
     for item in root.findall('.//channel/item'):
-        article = ArticleParser(item)
-        news_items.append(article)
+        xml_items.append(item)
+
+    def parse_list_portion(list):
+        for item in list:
+            article = ArticleParser(item)
+            news_items.append(article)
+
+    delegationList = [[], [], [], [], []]
+
+    for x in range(len(xml_items)):
+        delegationList[x%5].append(xml_items[x])
+
+    t1 = threading.Thread(target=parse_list_portion, args=(delegationList[0],))
+    t2 = threading.Thread(target=parse_list_portion, args=(delegationList[1],))
+    t3 = threading.Thread(target=parse_list_portion, args=(delegationList[2],))
+    t4 = threading.Thread(target=parse_list_portion, args=(delegationList[3],))
+    t5 = threading.Thread(target=parse_list_portion, args=(delegationList[4],))
+ 
+    # starting thread 1
+    t1.start()
+    t2.start()
+    t3.start()
+    t4.start()
+    t5.start()
+ 
+    # wait until thread 1 is completely executed
+    t1.join()
+    t2.join()
+    t3.join()
+    t4.join()
+    t5.join()
+
     return news_items

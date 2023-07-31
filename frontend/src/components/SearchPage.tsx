@@ -70,24 +70,26 @@ const SearchPage: React.FC = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <Button variant="contained" onClick={handleSearch} sx={{ backgroundColor: '#f15025',
-                '&:hover': {
-                  backgroundColor: 'black', 
-                   },
-                    }}>
-                    <SearchIcon style={{ color: 'white' }}/>
-                  </Button>
+                  <Button variant="contained" onClick={handleSearch} sx={{
+                    backgroundColor: '#f15025',
+                    '&:hover': {
+                      backgroundColor: 'black',
+                    },
+                  }}>
+                    <SearchIcon style={{ color: 'white' }} />
+                  </Button>
                 </InputAdornment>
               ),
             }}
           />
         </form>
-        <div className="DaysBack" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-        <label style={{ marginRight: '10px' }}> Days back to search:</label>
+        <div className="DaysBack" style={{ marginTop: '20px' }}>
+          <label>Days Back to Search: </label>
           <input
             type="number"
             value={daysBack}
             onChange={(e) => setDaysBack(e.target.value)}
+            style={{ width: 100 }}
           />
         </div>
       </Container>

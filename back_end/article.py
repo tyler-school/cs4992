@@ -6,6 +6,7 @@ import requests
 from textblob import TextBlob
 from bias import BiasDetector
 from summarize import Summarizer
+from datetime import datetime, timezone
 
 from scraping.scrape import Scraper
 
@@ -106,12 +107,13 @@ class ArticleParser:
 
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
-        return {
+        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        days_difference = abs((self.pub_date - today).days)
+        return { 
             'title': self.title,
             'source': self.source,
-            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
-            'link': self.link,
-            'description': self.description
+            'date': f'{days_difference} days ago',
+            'link': self.link
         } 
 
     def text_description(self) -> str:

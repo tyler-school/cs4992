@@ -125,6 +125,7 @@ const HomePage: React.FC = () => {
   }, [data]);
 
 
+  // T1 - Uncomment T1 sections for the practice API call functionality
   // Practice JSON getting
   const [testJsonString, setTestJsonString] = useState('');
 
@@ -156,7 +157,8 @@ const HomePage: React.FC = () => {
       paddingTop: "0px"
     }}>
 
-      <h1>Stuff: {testJsonString}</h1>  
+      {/* T1 - Uncomment this */}
+      {/* <h1>Stuff: {testJsonString}</h1>   */}
 
       <Tooltip title="Make a custom search now" arrow placement='bottom'>
         <Fab id="foo" variant="extended" href='/search' sx={{position: "fixed", left: "35%", top: "2%", minWidth: "200px", width: "30%"}}>

@@ -8,6 +8,7 @@ from textblob import TextBlob
 from summarize import Summarizer
 from scraping.scrape import Scraper
 from bias import BiasDetector
+from typing import Union
 import threading
 
 class ArticleParser:
@@ -21,7 +22,7 @@ class ArticleParser:
 <source url="https://www.bbc.co.uk">BBC</source>
     """
 
-    def __init__(self, item: dict | Element):
+    def __init__(self, item: Union[dict, Element]):
         if isinstance(item, dict):
             self.item = item
         elif isinstance(item, Element):

@@ -7,6 +7,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { WidgetsJSON } from '../types/widgets';
 import DisplayWidgetComponent from './WidgetComponent';
 import moveLastToFront from '../types/helpers';
+import Logo from "../assets/artifindlogo.png";
+
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -202,6 +204,17 @@ const HomePage: React.FC = () => {
 
 
   return (
+    <div className="HomePage">
+      <div className="Logo" style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
+          <Box
+            component="img"
+            sx={{
+              height: 100,
+            }}
+            alt="Artifind"
+            src={Logo}
+          />
+      </div>
 
     <Box sx={{
       width: "100%",
@@ -212,14 +225,24 @@ const HomePage: React.FC = () => {
       {/* <h1>Stuff: {testJsonString}</h1>   */}
 
       <Tooltip title="Make a custom search now" arrow placement='bottom'>
-        <Fab id="foo" variant="extended" href='/search' sx={{position: "fixed", left: "35%", top: "2%", minWidth: "200px", width: "30%"}}>
-          <SearchIcon sx={{mr: 1}} />
+        <Fab id="foo" variant="extended" href='/search' sx={{left: "35%", top: "2%", minWidth: "200px", width: "30%"}}>
+          <SearchIcon sx={{mr: 1
+          }} />
           Search now
         </Fab>
       </Tooltip>
 
       <Tooltip title="Edit the widgets on your home page" arrow placement='top-start' sx={{fontSize: "20px"}}>
-          <Fab color="secondary" variant="extended" href='/edit' sx={{position: "fixed", bottom: "3%", right: "3%"}}>
+          <Fab variant="extended" href='/edit' 
+          sx={{position: "fixed", 
+          bottom: "3%", 
+          right: "3%", 
+          backgroundColor: "#f15025",
+          color: "white",
+        '&:hover': {
+          backgroundColor: "#191919",
+        }
+          }}>
             <EditIcon sx={{mr: 1}} />
             Edit
           </Fab>
@@ -240,6 +263,7 @@ const HomePage: React.FC = () => {
         }
       </Box>
     </Box>
+    </div>
   );
 };
 

@@ -110,18 +110,17 @@ def get_home_page(username: str):
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
 
+# Takes in the home format article dict (only technically needs link)
 @app.post("/summary")
 def get_summary(item: dict):
     # item: ArticleParser = ArticleParser(item)
     # item.from_dict()
-    article = Article(title=item['title'], 
-                      description=item['description'],
-                      source=item['source'],
-                      date=item['date'],
-                      link=item['link'])
     
-    body_text = SearchEngine().get_body_text_from_link(article.link)
-    return Summarizer().summarize(body_text)
+    body_text = SearchEngine().get_body_text_from_link(item.get("link"))
+    if body_text:
+        return Summarizer().summarize(body_text)
+    else:
+        raise HTTPException(status_code=400, detail=f'Make sure a link is included in the body')
     
 
     

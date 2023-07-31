@@ -26,7 +26,7 @@ class ArticleParser:
 
     def __find(self, tag):
         return self.item.find(tag).text
-    
+
     @property
     def body_text(self):
         if 'body_text' not in self.dict:
@@ -60,13 +60,13 @@ class ArticleParser:
             new_url = response.headers['Location']
             response = requests.head(new_url, allow_redirects=True)
         final_url = response.url
-        html_text = requests.get(final_url, allow_redirects=True) 
+        html_text = requests.get(final_url, allow_redirects=True)
 
         soup = BeautifulSoup(html_text.content.decode('utf-8'), features='html.parser')
         body = soup.find_all('p')
         lists = soup.find_all('li')
         return ' '.join([p.text for p in body]) + " " + ' '.join([p.text for p in lists])
-   
+
     @property
     def sentiment(self):
         """
@@ -84,7 +84,7 @@ class ArticleParser:
         bias_detector = BiasDetector()
         bias = bias_detector.find_bias(self.source)
         return bias
-    
+
     @property
     def summary(self):
         # need to physically paste in the key for demo into summarize.py
@@ -102,8 +102,8 @@ class ArticleParser:
             'sentiment': self.sentiment,
             'bias': self.bias
         }
-        return dict 
-    
+        return dict
+
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
         return {
@@ -129,4 +129,4 @@ def parse_news_items(not_response) -> List[ArticleParser]:
         article = ArticleParser(item)
         news_items.append(article)
     return news_items
- 
+

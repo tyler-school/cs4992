@@ -1,7 +1,7 @@
-// Form.tsx (Updated)
-
 import React, { useState } from 'react';
 import './Form.css';
+import { IconButton } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 
 interface FormProps {
   initialSearch: string;
@@ -32,39 +32,6 @@ const Form: React.FC<FormProps> = ({ initialSearch, initialTime, onDeleteForm })
     setSubmittedData(data);
   };
 
-  const closePopup = () => {
-    setSubmittedData(null);
-  };
-
-  //Change where the popup is here
-  const popupStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: '0',
-    left: '50%',
-    transform: 'translate(-50%)',
-    backgroundColor: '#fff',
-    border: '1px solid #ccc',
-    padding: '10px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  };
-
-  const formStyle: React.CSSProperties = {
-    position: 'relative',
-    width: '500px',
-  };
-
-  const deleteButtonStyle: React.CSSProperties = {
-    position: 'absolute',
-    bottom: '10px',
-    right: '10px',
-    backgroundColor: 'red',
-    color: '#fff',
-    padding: '8px 12px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  };
-
   const handleDeleteForm = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this form?');
     if (confirmDelete) {
@@ -72,36 +39,46 @@ const Form: React.FC<FormProps> = ({ initialSearch, initialTime, onDeleteForm })
     }
   };
 
+  const iconButtonStyle: React.CSSProperties = {
+    position: 'absolute',
+    bottom: '10px',
+    right: '10px',
+    backgroundColor: 'red',
+    color: '#fff',
+    padding: '8px', // Adjust the padding to make the area smaller
+    borderRadius: '50%', // Make the IconButton circular
+  };
+
   return (
-    <div style={formStyle}>
-      <div className="form-box">
+    <div className="form-box">
+      <div className="form-content">
         <label>
           Search:
-          <input type="text" value={search} onChange={handleSearchChange} />
+          <input
+            type="text"
+            value={search}
+            onChange={handleSearchChange}
+            onBlur={handleSubmit}
+            className="form-input"
+          />
         </label>
         <br />
         <label>
           Time:
-          <input type="text" value={time} onChange={handleTimeChange} />
+          <input
+            type="text"
+            value={time}
+            onChange={handleTimeChange}
+            onBlur={handleSubmit}
+            className="form-input"
+          />
         </label>
-
-        <br />
-        <button onClick={handleSubmit}>Submit</button>
-
-        {/* Display pop-up with submitted data */}
-        {submittedData && (
-          <div style={popupStyle}>
-            <h2>Submitted Data</h2>
-            <p>Search: {submittedData.search}</p>
-            <p>Time: {submittedData.time}</p>
-            <button onClick={closePopup}>Close</button>
-          </div>
-        )}
       </div>
 
-      <button style={deleteButtonStyle} onClick={handleDeleteForm}>
-        Delete Form
-      </button>
+      {/* Replace the delete button with the delete icon */}
+      <IconButton style={iconButtonStyle} onClick={handleDeleteForm}>
+        <DeleteIcon />
+      </IconButton>
     </div>
   );
 };

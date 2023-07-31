@@ -1,7 +1,4 @@
 from fastapi import FastAPI
-from datetime import datetime, timedelta
-from typing import List
-from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
 from json import load, dumps, loads
@@ -47,16 +44,14 @@ def read_root():
     return {"message": "Root API call"}
 
 @app.get("/search/{term}/{days}")
-def read_search(term: str, days: int, max_results: int=15):
+def read_search(term: str, days: int, max_results: int=25):
     searcher = SearchEngine(max_results=max_results)
     news: list[ArticleParser] = searcher.get_news(term, days)
-
     result: list[dict] = [n.to_search_dict() for n in news]
-    #print(result[0])
     return result
 
 @app.post("/home/{username}")
-def make_home_page(username: str, item: HomePageRequest, max_results=3):
+def make_home_page(username: str, item: HomePageRequest, max_results=25):
 
         # Try to create a new file for the home page
     try:

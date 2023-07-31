@@ -98,9 +98,6 @@ class SentimentOverTime:
         dates = self.generate_dates()
         polarities = self.analyse_polarity(self.get_x_news(self.generate_search_urls()))
 
-        print(dates)
-        print(polarities)
-
         column_names = ['date', 'polarity']
         df=pd.DataFrame(np.transpose([dates, polarities]), columns=column_names)
         df.polarity = df.polarity.astype(float)
@@ -112,7 +109,7 @@ class SentimentOverTime:
         plt.title(f"Polarity over time of the topic '{self.search_term}'")
         plt.xticks([dates[0], dates[-1]])
         plt.ylim(-1, 1)
-        plt.savefig(f'cs4992/back_end/graphing/sentiment_analysis_{self.search_term}.png')
+        plt.savefig(f'cs4992/back_end/sentiment_analysis_{self.search_term}.png')
         plt.show()
         plt.close()
 

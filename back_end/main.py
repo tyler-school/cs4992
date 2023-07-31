@@ -126,49 +126,47 @@ def get_summary(item: dict):
     
 
 @app.patch("/home/{username}")
-def patch_home_page(username: str, item: SearchRequest, max_results=3):
+def patch_home_page(username: str, item: SearchRequest, max_results=25):
     try:
-        home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
+        home_page_file = open(f"home_pages/{username}_home_page.json", 'r')
     except FileExistsError as e:
         return get_home_page(username)
 
     home_request: dict = item.model_dump()
     article_results: list[Article] = [] # title, source, date, link, description
     widgets: list[Widget] = []
-    for request in home_request["searches"]:
-        # request = searchTerm, numberOfDays
-        searcher = SearchEngine(max_results=max_results)
-        results: list[ArticleParser] = searcher.get_news(request["searchTerm"], request["numberOfDays"])
-        simple_results: list[dict] = (r.to_home_dict() for r in results)
 
-        for d in simple_results:
-            article_results.append(Article(
-                title=d['title'],
-                source=d['source'],
-                date=d['date'],
-                link=d['link'],
-                description=d['description']))
+    searcher = SearchEngine(max_results=max_results)
+    results: list[ArticleParser] = searcher.get_news(home_request["searchTerm"], home_request["numberOfDays"])
+    simple_results: list[dict] = (r.to_search_dict() for r in results)
+
+    for d in simple_results:
+        article_results.append(Article(
+            title=d['title'],
+            source=d['source'],
+            date=d['date'],
+            link=d['link'],
+            description=d["description"]))
         
-        widgets.append(Widget(searchTerm=request["searchTerm"],
-                              numberOfDays=request["numberOfDays"],
-                              articles=article_results))
-    
+    widgets.append(Widget(searchTerm=home_request["searchTerm"],
+                        numberOfDays=home_request["numberOfDays"],
+                        articles=article_results))
 
-    widgetList = loads(home_page_file.read())["widgets"]
-    widgetList.append(widgets)
+    widgetList = load(home_page_file)["widgets"]
+    widgetList = widgetList + widgets
 
     # Create the HomePage object
     home_page = HomePage(widgets=widgetList)
     # String representation of the HomePage object
     dump_str = dumps(home_page.model_dump())
 
+    home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
     # Write homePage info to article
     home_page_file.write(dump_str)
 
-    return home_page
+    return widgetList
 
-
-# Set Up CORS white list
+# White listing port 3000 so front end can make calls
 origins = [
     "http://localhost:3000",
 ]

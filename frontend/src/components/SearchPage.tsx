@@ -1,28 +1,27 @@
-import React, { useState } from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid'; // Import the Grid component
-import Logo from "../assets/artifind logo4.png";
+import Grid from '@mui/material/Grid';
+import Logo from "../assets/artifindlogo.png";
 import './SearchPage.css';
+import { Container, InputAdornment, TextField } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { RepeatOneSharp } from '@mui/icons-material';
 
 interface SearchResult {
-  url: string;
-  length: number;
-
-}
-
-interface SearchInput {
-  term: string;
-  days: number;
+  title: string;
+  link: string;
+  description: string;
+  date: string;
+  source: string;
+  sentiment: number[];
+  bias: string;
 }
 
 const SearchPage: React.FC = () => {
@@ -32,18 +31,11 @@ const SearchPage: React.FC = () => {
 
   const handleSearch = () => {
     axios
-      .get('http://127.0.0.1:8000/search/ukraine/2')
+      .get(`http://localhost:8000/search/${searchQuery}/${daysBack}`)
       .then((response) => {
         // Handle the response here
         console.log(response.data);
-        // Extract the relevant data from the API response (this may vary depending on the API)
-        if (response.data.length > 0) {
-          const result: SearchResult = {
-            url: response.data[0].url, // Assuming the URL is accessible as response.data[0].url
-            length: response.data[0].url.length,
-          };
-          setSearchResults([result]); // Store the response in state
-        }
+        setSearchResults(response.data); // Store the response in state
       })
       .catch((error) => {
         // Handle errors here
@@ -53,40 +45,40 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="SearchPage">
-      <div className="Logo" style={{ display: 'flex', justifyContent: 'center',  margin: '50px' }}>
-      <a href="http://localhost:3000">
-  <Box 
-    component="img"
-    sx={{
-      height: 100,
-    }}
-    alt="Artifind"
-    src={Logo}
-    />
-    </a>
-</div>
-      <div className="SearchContainer">
-        {/* Wrap the search bar in a Box component */}
-        <Box
-          component="form"
-          sx={{
-            '& > :not(style)': { m: 1, width: '25ch' },
-          }}
-          noValidate
-          autoComplete="off"
-        >
+      <div className="Logo" style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
+        <a href="http://localhost:3000">
+          <Box
+            component="img"
+            sx={{
+              height: 100,
+            }}
+            alt="Artifind"
+            src={Logo}
+          />
+        </a>
+      </div>
+
+      <Container maxWidth="md" sx={{ mt: 5 }}>
+        <form onSubmit={handleSearch}>
           <TextField
-            id="outlined-basic"
+            id="search"
+            type="search"
             label="Search Artifind"
-            variant="outlined"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            sx={{ width: 600 }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button variant="contained" onClick={handleSearch}>
+                    <SearchIcon />
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
           />
-           <Button variant="contained" onClick={handleSearch}>
-            Search
-          </Button>
-        </Box>
-        <div className="DaysBack">
+        </form>
+        <div className="DaysBack" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
           <label>Days back to search: </label>
           <input
             type="number"
@@ -94,30 +86,28 @@ const SearchPage: React.FC = () => {
             onChange={(e) => setDaysBack(e.target.value)}
           />
         </div>
-      </div>
-      {/* Display the search results */}
+      </Container>
+
       {searchResults.length > 0 && (
         <Grid container spacing={2} className="SearchResults" marginLeft={'200px'}>
           <Grid item xs={12}>
             <Typography variant="h4">Search Results</Typography>
           </Grid>
-          {/* Display top search result */}
-          <Grid item xs={8} style={{ paddingBottom: '15px', backgroundColor: '#f0f0f0' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography variant="body1">Fact:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1">{searchResults[0].url}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1">Length:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1">{searchResults[0].length}</Typography>
+          {searchResults.map((result, index) => (
+            <Grid item xs={8} key={index} style={{ paddingBottom: '15px', backgroundColor: index % 2 === 0 ? '#f0f0f0' : '#ffffff', }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="body1">Title: <a href={result.link} target="_blank" rel="noopener noreferrer">{result.title}</a></Typography>
+                  <Typography variant="body1">Description: <span dangerouslySetInnerHTML={{ __html: result.description }} /></Typography>
+                  <Typography variant="body1">Date: {result.date}</Typography>
+                  <Typography variant="body1">Source: {result.source}</Typography>
+                  {/* Add a check for the 'sentiment' field */}
+                  <Typography variant="body1">Sentiment: {result.sentiment ? result.sentiment.join(', ') : 'N/A'}</Typography>
+                  <Typography variant="body1">Bias: {result.bias}</Typography>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ))}
         </Grid>
       )}
     </div>

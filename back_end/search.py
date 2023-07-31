@@ -9,7 +9,7 @@ from article import ArticleParser, parse_news_items
 from json import dumps
 
 from datetime import datetime, timedelta, date
-from scraping.scrape import Scraper
+from scrape import Scraper
 
 class SearchEngine:
 

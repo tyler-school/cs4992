@@ -5,8 +5,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'; // Import the Grid component
-import Logo from "../assets/artifindlogo2.png";
-import SearchIcon from "../assets/searchicon.png";
+import Logo from "../assets/artifind logo4.png";
 import './SearchPage.css';
 
 import '@fontsource/roboto/300.css';
@@ -45,20 +44,17 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="SearchPage">
-      <div className="Logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-  <Box
+      <div className="Logo" style={{ display: 'flex', justifyContent: 'center',  margin: '50px' }}>
+      <a href="http://localhost:3000">
+  <Box 
     component="img"
     sx={{
-      height: 200,
-      alignSelf: 'center',
-      display: 'flex', // Set the Box as a flex container
-      alignItems: 'center', // Center the content vertically
-      justifyContent: 'center', // Center the content horizontally
+      height: 100,
     }}
     alt="Artifind"
     src={Logo}
-  >
-  </Box>
+    />
+    </a>
 </div>
       <div className="SearchContainer">
         {/* Wrap the search bar in a Box component */}
@@ -77,16 +73,8 @@ const SearchPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Button variant="contained" onClick={handleSearch}>
-          <Box
-            component="img"
-            sx={{
-            height: 20,
-            alignSelf: 'center', 
-            }}
-            alt="Search"
-            src={SearchIcon}
-        />
+           <Button variant="contained" onClick={handleSearch}>
+            Search
           </Button>
         </Box>
         <div className="DaysBack">

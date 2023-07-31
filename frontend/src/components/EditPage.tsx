@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Grid, Button, TextField, InputAdornment } from '@mui/material'; // Import the Grid, Button, and InputAdornment components
 import Form from './Form';
-import { IconButton } from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Tooltip, Fab, Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControlLabel, FormGroup, Input, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import Box from '@mui/material/Box';
 import Logo from "../assets/artifindlogo.png";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const EditPage: React.FC = () => {
   const [forms, setForms] = useState([
@@ -29,7 +29,7 @@ const EditPage: React.FC = () => {
 
   return (
     <div>
-      <div className="Logo" style={{ display: 'flex', justifyContent: 'center',  margin: '50px' }}>
+      <div className="Logo" style={{ display: 'flex', justifyContent: 'center',  margin: '20px' }}>
         <a href="http://localhost:3000">
           <Box
             component="img"
@@ -55,11 +55,23 @@ const EditPage: React.FC = () => {
       </Grid>
 
       {/* "Add Form" button */}
-      <div style={{ position: 'fixed', bottom: '20px', left: '20px', display: 'flex', alignItems: 'center' }}>
+      <div style={{ position: 'fixed', bottom: '20px', left: '10px', display: 'flex', alignItems: 'center' }}>
 
-        <IconButton style={{ fontSize: '50', color: 'green' }} onClick={addForm}>
-          <AddCircleIcon />
-        </IconButton>
+        <Tooltip title="" arrow placement='top-start' sx={{ fontSize: "20px" }}>
+          <Fab variant="extended" sx={{
+            position: "fixed",
+            bottom: "3%",
+            right: "3%",
+            backgroundColor: "#f15025",
+            color: "white",
+            '&:hover': {
+              backgroundColor: "#191919",
+            }
+          }} onClick={addForm}>
+            <AddCircleOutlineIcon sx={{ mr: 1 }} />
+            Add form
+          </Fab>
+        </Tooltip>
       </div>
     </div>
   );

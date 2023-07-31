@@ -7,6 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { WidgetsJSON } from '../types/widgets';
 import DisplayWidgetComponent from './WidgetComponent';
 import moveLastToFront from '../types/helpers';
+import Logo from "../assets/artifindlogo.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -201,46 +202,68 @@ const HomePage: React.FC = () => {
     }, [])
 
 
-  return (
-
-    <Box sx={{
-      width: "100%",
-      paddingTop: "0px"
-    }}>
-
-      {/* T1 - Uncomment this */}
-      {/* <h1>Stuff: {testJsonString}</h1>   */}
-
-      <Tooltip title="Make a custom search now" arrow placement='bottom'>
-        <Fab id="foo" variant="extended" href='/search' sx={{position: "fixed", left: "35%", top: "2%", minWidth: "200px", width: "30%"}}>
-          <SearchIcon sx={{mr: 1}} />
-          Search now
-        </Fab>
-      </Tooltip>
-
-      <Tooltip title="Edit the widgets on your home page" arrow placement='top-start' sx={{fontSize: "20px"}}>
-          <Fab color="secondary" variant="extended" href='/edit' sx={{position: "fixed", bottom: "3%", right: "3%"}}>
-            <EditIcon sx={{mr: 1}} />
-            Edit
-          </Fab>
-      </Tooltip>
-
+    return (
+      <div className="HomePage">
+        <div className="Logo" style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
+            <Box
+              component="img"
+              sx={{
+                height: 100,
+              }}
+              alt="Artifind"
+              src={Logo}
+            />
+        </div>
+  
       <Box sx={{
-        width: "75%",
-        marginLeft: "12.5%",
-        marginRight: "12.5%",
-        marginTop: "5.5%"
+        width: "100%",
+        paddingTop: "0px"
       }}>
-
-        {
-          widgetsData?.widgets.map((widget) => {
-            return <DisplayWidgetComponent searchTerm={widget.searchTerm} numberOfDays={widget.numberOfDays} articles={widget.articles} />
-            // return <h1>{widget.searchTerm}</h1>
-          })
-        }
+  
+        {/* T1 - Uncomment this */}
+        {/* <h1>Stuff: {testJsonString}</h1>   */}
+  
+        <Tooltip title="Make a custom search now" arrow placement='bottom'>
+          <Fab id="foo" variant="extended" href='/search' sx={{left: "35%", top: "2%", minWidth: "200px", width: "30%"}}>
+            <SearchIcon sx={{mr: 1
+            }} />
+            Search now
+          </Fab>
+        </Tooltip>
+  
+        <Tooltip title="Edit the widgets on your home page" arrow placement='top-start' sx={{fontSize: "20px"}}>
+            <Fab variant="extended" href='/edit' 
+            sx={{position: "fixed", 
+            bottom: "3%", 
+            right: "3%", 
+            backgroundColor: "#f15025",
+            color: "white",
+          '&:hover': {
+            backgroundColor: "#191919",
+          }
+            }}>
+              <EditIcon sx={{mr: 1}} />
+              Edit
+            </Fab>
+        </Tooltip>
+  
+        <Box sx={{
+          width: "75%",
+          marginLeft: "12.5%",
+          marginRight: "12.5%",
+          marginTop: "5.5%"
+        }}>
+  
+          {
+            widgetsData?.widgets.map((widget) => {
+              return <DisplayWidgetComponent searchTerm={widget.searchTerm} numberOfDays={widget.numberOfDays} articles={widget.articles} />
+              // return <h1>{widget.searchTerm}</h1>
+            })
+          }
+        </Box>
       </Box>
-    </Box>
-  );
-};
-
+      </div>
+    );
+  };
+  
 export default HomePage;

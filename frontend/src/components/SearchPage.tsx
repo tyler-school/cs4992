@@ -58,8 +58,8 @@ const SearchPage: React.FC = () => {
         </a>
       </div>
 
-      <Container maxWidth="md" sx={{ mt: 5 }}>
-        <form onSubmit={handleSearch}>
+      <Container maxWidth="md" sx={{ mt: 5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <form onSubmit={handleSearch}>
           <TextField
             id="search"
             type="search"
@@ -70,20 +70,26 @@ const SearchPage: React.FC = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <Button variant="contained" onClick={handleSearch}>
-                    <SearchIcon />
+                  <Button variant="contained" onClick={handleSearch} sx={{
+                    backgroundColor: '#f15025',
+                    '&:hover': {
+                      backgroundColor: 'black',
+                    },
+                  }}>
+                    <SearchIcon style={{ color: 'white' }} />
                   </Button>
                 </InputAdornment>
               ),
             }}
           />
         </form>
-        <div className="DaysBack" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-          <label>Days back to search: </label>
+        <div className="DaysBack" style={{ marginTop: '20px' }}>
+          <label>Days Back to Search: </label>
           <input
             type="number"
             value={daysBack}
             onChange={(e) => setDaysBack(e.target.value)}
+            style={{ width: 100 }}
           />
         </div>
       </Container>

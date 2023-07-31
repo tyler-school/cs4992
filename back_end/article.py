@@ -107,7 +107,8 @@ class ArticleParser:
             'title': self.title,
             'source': self.source,
             'date': f'{days_difference} days ago',
-            'link': self.link
+            'link': self.link,
+            'description': self.description
         } 
 
     def text_description(self) -> str:

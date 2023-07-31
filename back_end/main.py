@@ -1,7 +1,4 @@
 from fastapi import FastAPI
-from datetime import datetime, timedelta
-from typing import List
-from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError
 from json import load, dumps, loads
@@ -9,6 +6,7 @@ from pydantic import BaseModel
 from search import SearchEngine
 from article import ArticleParser
 from fastapi.middleware.cors import CORSMiddleware
+from summarize import Summarizer
 import os
 
 app = FastAPI()
@@ -47,22 +45,20 @@ def read_root():
     return {"message": "Root API call"}
 
 @app.get("/search/{term}/{days}")
-def read_search(term: str, days: int, max_results: int=15):
+def read_search(term: str, days: int, max_results: int=25):
     searcher = SearchEngine(max_results=max_results)
     news: list[ArticleParser] = searcher.get_news(term, days)
-
     result: list[dict] = [n.to_search_dict() for n in news]
-    #print(result[0])
     return result
 
 @app.post("/home/{username}")
-def make_home_page(username: str, item: HomePageRequest, max_results=3):
+def make_home_page(username: str, item: HomePageRequest, max_results=25):
 
         # Try to create a new file for the home page
     try:
         home_page_file = open(f"home_pages/{username}_home_page.json", 'x')
     except FileExistsError as e:
-        return get_home_page(username)
+        raise HTTPException(status_code=400, detail=f"Home page already exists, try GET /home/{username}")
 
     home_request: dict = item.model_dump()
     article_results: list[Article] = [] # title, source, date, link, description
@@ -118,12 +114,20 @@ def get_home_page(username: str):
 def get_summary(item: dict):
     # item: ArticleParser = ArticleParser(item)
     # item.from_dict()
-    article = ArticleParser(item)
-    return article.summary()
+    article = Article(title=item['title'], 
+                      description=item['description'],
+                      source=item['source'],
+                      date=item['date'],
+                      link=item['link'])
+    
+    body_text = SearchEngine().get_body_text_from_link(article.link)
+    return Summarizer().summarize(body_text)
+    
+
+    
 
 @app.patch("/home/{username}")
-def patch_home_page(username: str, item: HomePage):
-
+def patch_home_page(username: str, item: SearchRequest, max_results=3):
     try:
         home_page_file = open(f"home_pages/{username}_home_page.json", 'w')
         page_obj = loads(home_page_file.read())
@@ -135,16 +139,3 @@ def patch_home_page(username: str, item: HomePage):
         raise HTTPException(status_code=500, detail="File not found")
     except ValidationError as ve:
         raise HTTPException(status_code=500, detail="Error reading data: Invalid JSON format")
-
-# Set Up CORS white list
-origins = [
-    "http://localhost:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)

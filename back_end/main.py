@@ -57,7 +57,7 @@ def make_home_page(username: str, item: HomePageRequest, max_results=25):
     try:
         home_page_file = open(f"home_pages/{username}_home_page.json", 'x')
     except FileExistsError as e:
-        return get_home_page(username)
+        raise HTTPException(status_code=400, detail=f"Home page already exists, try GET /home/{username}")
 
     home_request: dict = item.model_dump()
     article_results: list[Article] = [] # title, source, date, link, description
@@ -113,8 +113,13 @@ def get_home_page(username: str):
 def get_summary(item: dict):
     # item: ArticleParser = ArticleParser(item)
     # item.from_dict()
-    article = ArticleParser(item)
-    return article.summary()
+    article = Article(title=item['title'], 
+                      description=item['description'],
+                      source=item['source'],
+                      date=item['date'],
+                      link=item['link'])
+    
+    
 
 @app.patch("/home/{username}")
 def patch_home_page(username: str, item: SearchRequest, max_results=3):

@@ -114,7 +114,7 @@ class ArticleParser:
             'source': self.source,
             'date': f'{days_difference} days ago',
             'link': self.link
-        }
+        } 
 
     def text_description(self) -> str:
         return Scraper().get_desc_text(self.description)

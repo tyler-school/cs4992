@@ -42,14 +42,14 @@ const DateTitle = styled(Paper)(({}) => ({
 
 const DisplayWidgetComponent: React.FC<Widget> = ({ searchTerm, numberOfDays, articles }) => {
 
-    var colorThing = "#a6bfe0"
+    var colorThing = "#e6e8e6"
 
     if(searchTerm == "Northeastern University") {
-        colorThing = "#ebd798"
+        colorThing = "#e6e8e6"
     }
 
     if(searchTerm == "England Cricket") {
-        colorThing = "#ace3ca"
+        colorThing = "#e6e8e6"
     }
 
     return (
@@ -89,7 +89,14 @@ const DisplayWidgetComponent: React.FC<Widget> = ({ searchTerm, numberOfDays, ar
                         </Grid>
                         
                         <Grid item xs={7}>
-                            <Button href={articles[0].link} target="_blank" sx={{fontSize: "20px", textTransform: "inherit", justifyContent: "flex-end", padding: '9.5px', paddingRight: '30px',}} variant="contained" fullWidth endIcon={<OpenInNewIcon />}>{articles[0].source}</Button>
+                            <Button href={articles[0].link} target="_blank" sx={{fontSize: "20px", 
+                            textTransform: "inherit", justifyContent: "flex-end", padding: '9.5px', paddingRight: '30px',
+                            backgroundColor: "#f36a4c",
+          color: "white",
+        '&:hover': {
+          backgroundColor: "#191919",
+        }
+          }} variant="contained" fullWidth endIcon={<OpenInNewIcon />}>{articles[0].source}</Button>
                         </Grid>
 
                         </Grid>
@@ -113,7 +120,14 @@ const DisplayWidgetComponent: React.FC<Widget> = ({ searchTerm, numberOfDays, ar
                         </Grid>
                         
                         <Grid item xs={7}>
-                            <Button href={articles[1].link} target="_blank" sx={{fontSize: "20px", textTransform: "inherit", justifyContent: "flex-end", padding: '9.5px', paddingRight: '30px',}} variant="contained" fullWidth endIcon={<OpenInNewIcon />}>{articles[1].source}</Button>
+                            <Button href={articles[1].link} target="_blank" sx={{fontSize: "20px", 
+                            textTransform: "inherit", justifyContent: "flex-end", padding: '9.5px', paddingRight: '30px', 
+                            backgroundColor: "#f36a4c",
+                            color: "white",
+                          '&:hover': {
+                            backgroundColor: "#191919",
+                          }
+                            }} variant="contained" fullWidth endIcon={<OpenInNewIcon />}>{articles[1].source}</Button>
                         </Grid>
 
                         </Grid>
@@ -137,7 +151,15 @@ const DisplayWidgetComponent: React.FC<Widget> = ({ searchTerm, numberOfDays, ar
                         </Grid>
                         
                         <Grid item xs={7}>
-                            <Button href={articles[2].link} target="_blank" sx={{fontSize: "20px", textTransform: "inherit", justifyContent: "flex-end", padding: '9.5px', paddingRight: '30px',}} variant="contained" fullWidth endIcon={<OpenInNewIcon />}>{articles[2].source}</Button>
+                            <Button href={articles[2].link} target="_blank" sx={{fontSize: "20px", 
+                            textTransform: "inherit", justifyContent: "flex-end", padding: '9.5px', paddingRight: '30px',
+                            backgroundColor: "#f36a4c",
+          color: "white",
+        '&:hover': {
+          backgroundColor: "#191919",
+        }
+          }}
+           variant="contained" fullWidth endIcon={<OpenInNewIcon />}>{articles[2].source}</Button>
                         </Grid>
 
                         </Grid>

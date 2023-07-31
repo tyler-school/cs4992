@@ -17,13 +17,11 @@ interface SearchResult {
   url: string;
   length: number;
 
-  // search: string;
-  // start_date: string;
-  // end_date: string;
-  // yyyy-mm-dd
-  ///search/{term}/{start_date}/{end_date}
-  ///ukraine/2022-02-24/2023-7-25
-  //search/{ukraine}/{2022-02-24}/{2023-7-25}
+}
+
+interface SearchInput {
+  term: string;
+  days: number;
 }
 
 const SearchPage: React.FC = () => {
@@ -33,7 +31,7 @@ const SearchPage: React.FC = () => {
 
   const handleSearch = () => {
     axios
-      .get('http://127.0.0.1:8000/search/ukraine/2022-02-24/2023-7-25')
+      .get('http://127.0.0.1:8000/search/ukraine/2')
       .then((response) => {
         // Handle the response here
         console.log(response.data);

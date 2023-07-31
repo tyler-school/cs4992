@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 import sys
+import nltk
+nltk.download('stopwords')
 
 class Scraper():
 
@@ -53,7 +55,6 @@ class Scraper():
             return desc
 
     def _scrape_desc_text(self, html) -> list[str]:
-
         
         # soup = BeautifulSoup(html, features="lxml")
         soup = BeautifulSoup(html)

@@ -25,8 +25,7 @@ def read_root():
     return {"message": "Root API call"}
 
 @app.get("/search/{term}/{days}")
-def read_search(term: str, days: int, max_results: int=15):
-
+def read_search(term: str, days: int, max_results: int=2):
     searcher = SearchEngine(max_results=max_results)
     news: list[ArticleParser] = searcher.get_news(term, days)
 

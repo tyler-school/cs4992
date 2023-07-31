@@ -50,7 +50,7 @@ class ArticleParser:
     
     @property
     def body_text(self):
-        html_text = requests.get(self._link, allow_redirects=True) 
+        html_text = requests.get(self.link, allow_redirects=True) 
         soup = BeautifulSoup(html_text.content.decode('utf-8'))
         body = soup.find_all('p')
         lists = soup.find_all('li')
@@ -91,7 +91,7 @@ class ArticleParser:
             'title': self.title,
             'link': self.link,
             'description': self.description,
-            'date': self.pub_date,
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'source': self.source,
             'sentiment': self.sentiment,
             'bias': self.bias
@@ -102,7 +102,7 @@ class ArticleParser:
         return {
             'title': self.title,
             'source': self.source,
-            'date': self.pub_date,
+            'date': self.pub_date.strftime('%Y-%m-%d %H:%M:%S'),
             'link': self.link
         }
 

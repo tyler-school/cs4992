@@ -7,6 +7,7 @@ from textblob import TextBlob
 from bias import BiasDetector
 from misc_tools.summarize import Summarizer
 from datetime import datetime, timezone
+import sys
 
 from scrape import Scraper
 
@@ -97,7 +98,14 @@ class ArticleParser:
 
     def to_search_dict(self) -> dict:
         """ Converts this 'Article' into a dict with every field that needs to be displayed in the search page"""
-        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        # Check if it's being run on mac, and run something different
+        if sys.platform == 'darwin':
+            # Running on a mac
+            today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        else:
+            # Running on else
+            today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        #today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         days_difference = abs((self.pub_date - today).days)
         date_str = self.pub_date.strftime('%Y-%m-%d %H:%M')
         if days_difference == 1:
@@ -117,7 +125,14 @@ class ArticleParser:
 
     def to_home_dict(self) -> dict:
         """Converts this 'Article' into a dict with every field that needs to be displayed in the home page"""
-        today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        # Check if it's being run on mac, and run something different
+        if sys.platform == 'darwin':
+            # Running on a mac
+            today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        else:
+            # Running on else
+            today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        # today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         days_difference = abs((self.pub_date - today).days)
         date_str = self.pub_date.strftime('%Y-%m-%d %H:%M')
         if days_difference == 1:
